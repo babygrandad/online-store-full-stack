@@ -1,0 +1,29 @@
+/* ---------- Global styling ---------- */
+.g-image{
+    width: 100%;
+    height: auto;
+}/* hero and call-to-action image */
+
+.eighty-page{
+    min-height: 80vh;
+} /* forces an element to take 80% viewport height */
+
+.midcenter{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} /* aligns and justifies content to the middle & center of an element */
+
+
+/* ---------- Slider - Homepage ---------- */
+.row_item{
+    min-width: 306px;
+    object-fit: contain;
+    margin-right: 24px;
+    transition: transform 450ms;
+}
+.row_items{
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
