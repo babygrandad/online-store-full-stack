@@ -7,6 +7,7 @@ const axios =  require("axios");
 const _ = require('lodash');
 const mysql = require('mysql2');
 const session = require('express-session');
+const path = require ('path');
 
 const app = express();
 
@@ -14,6 +15,11 @@ app.set('view engine', 'ejs');
 // app.use(session({ secret : process.env.SECRET }))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+//temporary bootstrap points for offlne use
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 
 app.route('/')
 .get((req,res)=>{
