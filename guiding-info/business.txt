@@ -1,0 +1,83 @@
+Name : "Gem Haven"
+
+Mission Statement:
+To offer customers exquisite and unique jewelry pieces that reflect their personal style, and to deliver a seamless and enjoyable online shopping experience that exceeds their expectations.
+
+Vision Statement:
+To become the leading online destination for high-quality and distinctive jewelry pieces, known for our exceptional customer service and for bringing joy to our customers through our products.
+
+Overview:
+Our business is an online retailer of exquisite jewelry pieces, ranging from classic to contemporary styles, offering a wide selection of pieces for every taste and budget. We are passionate about helping our customers find the perfect piece that reflects their unique personality and enhances their natural beauty. Our website is designed to be user-friendly and informative, featuring detailed product descriptions and high-quality images that allow customers to examine each piece up close. We are committed to providing excellent customer service, from expert advice on selecting the right piece to fast and reliable shipping and hassle-free returns. Our goal is to make the online shopping experience as enjoyable and stress-free as possible, so that our customers can focus on the excitement and joy of finding the perfect piece of jewelry.
+
+
+
+JSON DATA-STRUCTURE EXAMPLE
+
+{
+  "id": "123456",
+  "name": "Diamond Solitaire Pendant",
+  "description": "A classic and timeless diamond pendant that makes a perfect gift for any occasion.",
+  "category": "Necklaces",
+  "material": "14k white gold",
+  "gemstones": [
+    {
+      "name": "Diamond",
+      "type": "Natural",
+      "shape": "Round",
+      "carat_weight": 0.50,
+      "color": "G",
+      "clarity": "VS1"
+    }
+  ],
+  "price": 999.99,
+  "image_url": "https://www.example.com/images/diamond-solitaire-pendant.jpg",
+  "stock": 10,
+  "reviews": [
+    {
+      "user_id": "98765",
+      "rating": 5,
+      "comment": "I love this pendant! It's even more beautiful in person. Great quality and fast shipping too."
+    },
+    {
+      "user_id": "54321",
+      "rating": 4,
+      "comment": "The pendant is lovely but the chain is a bit flimsy. Overall still a good value for the price."
+    }
+  ]
+}
+
+
+
+SQL DATA-STRUCTURE EXAMPLE
+
+CREATE TABLE jewelry (
+  id INT NOT NULL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  category VARCHAR(50),
+  material VARCHAR(50),
+  price DECIMAL(10, 2),
+  image_url VARCHAR(255),
+  stock INT,
+);
+
+CREATE TABLE gemstones (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  jewelry_id INT NOT NULL,
+  name VARCHAR(50),
+  type VARCHAR(50),
+  shape VARCHAR(50),
+  carat_weight DECIMAL(10, 2),
+  color VARCHAR(50),
+  clarity VARCHAR(50),
+  FOREIGN KEY (jewelry_id) REFERENCES jewelry(id)
+);
+
+CREATE TABLE reviews (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  jewelry_id INT NOT NULL,
+  user_id INT NOT NULL,
+  rating INT NOT NULL,
+  comment TEXT,
+  FOREIGN KEY (jewelry_id) REFERENCES jewelry(id)
+);
