@@ -3,6 +3,9 @@
     width: 100%;
     height: auto;
 }/* hero and call-to-action image */
+.text-justify{
+    text-align: justify;
+} /*justifies the text */
 
 .eighty-page{
     min-height: 80vh;
