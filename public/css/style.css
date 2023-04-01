@@ -2,27 +2,24 @@
 .g-image{
     width: 100%;
     height: auto;
-}/* hero and call-to-action image */
+}/* makes an image 100% width and auto height */
 .text-justify{
     text-align: justify;
-} /*justifies the text */
+}/*justifies the text */
 .text-wrapper{
     min-height: 300px;
-}
-
+}/* wrapper encapsulating big text on a colored or image backgound */
 .eighty-page{
     min-height: 80vh;
-} /* forces an element to take 80% viewport height */
-
+}/* forces an element to take 80% viewport height */
 .midcenter{
     display: flex;
     align-items: center;
     justify-content: center;
-} /* aligns and justifies content to the middle & center of an element */
+}/* aligns and justifies content to the middle & center of an element */
 
 
 /* ---------- Homepage ---------- */
-
 /* slider  --- */
 .row_item{
     min-width: 306px;
@@ -38,7 +35,6 @@
 
 
 /* ---------- About-page ---------- */
-
 /* Hero --- */
 #about-hero, #unique-quote{
     background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("https://cdn.stocksnap.io/img-thumbs/960w/pink%20rose-silver_AB55BXZIXF.jpg");
