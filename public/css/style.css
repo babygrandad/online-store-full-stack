@@ -36,7 +36,8 @@
 
 /* ---------- About-page ---------- */
 /* Hero --- */
-#about-hero, #unique-quote{
+/* refactor this code into a class becuase it has sections from 2 pages (about and contact) */
+#about-hero, #unique-quote, #contact-hero{
     background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("https://cdn.stocksnap.io/img-thumbs/960w/pink%20rose-silver_AB55BXZIXF.jpg");
     background-attachment: fixed;
     color: whitesmoke;
