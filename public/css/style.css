@@ -3,15 +3,19 @@
     width: 100%;
     height: auto;
 }/* makes an image 100% width and auto height */
+
 .text-justify{
     text-align: justify;
 }/*justifies the text */
+
 .text-wrapper{
     min-height: 300px;
 }/* wrapper encapsulating big text on a colored or image backgound */
+
 .eighty-page{
     min-height: 80vh;
 }/* forces an element to take 80% viewport height */
+
 .midcenter{
     display: flex;
     align-items: center;
