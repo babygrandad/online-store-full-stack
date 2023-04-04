@@ -42,3 +42,10 @@
     background-attachment: fixed;
     color: whitesmoke;
 }
+
+/* ---------- Contact-page ---------- */
+/* Map --- */
+.map{
+    min-height: 300px;
+    width: 100%;
+}
