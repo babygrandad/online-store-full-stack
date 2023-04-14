@@ -60,7 +60,15 @@
 .item-wrapper{
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     max-width: max-content;
-}.item-image{
+}
+
+.item-link{
+    text-decoration: none;
+    color: black;
+    cursor: default;
+}
+
+.item-image{
     border-radius: 10px;
 }
 .item-image:hover{
@@ -98,16 +106,18 @@
 }
 .color-wrapper li:nth-child(1) {
     background-color: rgb(47, 191, 243);
-  }
-
+}
   .color-wrapper li:nth-child(2) {
     background-color: rgb(255, 189, 195);
-  }
-
+}
   .color-wrapper li:nth-child(3) {
     background-color: rgb(131, 252, 143);
-  }
-
+}
   .color-wrapper li:nth-child(4) {
     background-color: rgb(237, 189, 118);
-  }
+}
+
+/* --- sorting buttons component --- */
+.sorting-buttons{
+    min-width: 120px;
+}

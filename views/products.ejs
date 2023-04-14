@@ -21,8 +21,18 @@
 
 <section>
     <div class="container">
+        <%- include('components/offcanvas') %>
         <div class="row">
-            <div class="d-none d-md-block col-md-3"><h2>Filters</h2></div>
+            <d-sm-block class="py-3 d-flex d-md-none col-12 justify-content-around">
+                <button class="btn btn-outline-dark btn-lg sorting-buttons" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Filters</button>
+                <input class="btn btn-outline-dark btn-lg sorting-buttons" type="button" value="Sort">
+            </d-sm-block>
+        </div>
+        <div class="row">
+            <div class="d-none d-md-block col-md-3">
+                <h2>Filters</h2>
+                <%- include('components/filters') %>
+            </div>
             <div class="col-md-9">
                 <div class="row">
                     <%- include('components/item2') %>
