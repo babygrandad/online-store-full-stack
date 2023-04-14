@@ -28,8 +28,7 @@
 .row_item{
     min-width: 306px;
     object-fit: contain;
-    margin-right: 24px;
-    transition: transform 450ms;
+    margin: 0 12px;
 }
 .row_items{
     display: flex;
@@ -53,3 +52,62 @@
     min-height: 300px;
     width: 100%;
 }
+
+
+/* ---------- Individual Components ---------- */
+
+/* --- Item component --- */
+.item-wrapper{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    max-width: max-content;
+}.item-image{
+    border-radius: 10px;
+}
+.item-image:hover{
+    transform: scale(1.045);
+    transition: transform 450ms;
+}
+/* Sizes and color --- */
+.available-options-wrapper {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    
+}
+
+.available-options-wrapper li{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    margin:5px 10px 5px 0px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+
+/* color only */
+/* these are just test with the colours. you might need to do this inline. */
+.color-wrapper li{
+    border: none;
+    margin-right: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+.color-wrapper li:nth-child(1) {
+    background-color: rgb(47, 191, 243);
+  }
+
+  .color-wrapper li:nth-child(2) {
+    background-color: rgb(255, 189, 195);
+  }
+
+  .color-wrapper li:nth-child(3) {
+    background-color: rgb(131, 252, 143);
+  }
+
+  .color-wrapper li:nth-child(4) {
+    background-color: rgb(237, 189, 118);
+  }

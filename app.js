@@ -36,6 +36,11 @@ app.route('/about')
     res.render('about',{pageTitle : "about"})
 });
 
+app.route('/products')
+.get((req,res)=>{
+    res.render('products',{pageTitle : "Shop"})
+});
+
 app.route('/categories')
 .get((req,res)=>{
     res.render('categories',{pageTitle : "categories"})
