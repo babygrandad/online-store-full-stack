@@ -64,6 +64,13 @@
 }
 
 
+/* ---------- Product-page (indivisual) ---------- */
+/* big product image --- */
+.product-areas{
+    border: 1px solid;
+}
+
+
 /* ---------- Individual Components ---------- */
 
 /* --- Item component --- */
@@ -102,6 +109,7 @@
     border: none;
     margin-right: 10px;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border-radius: 50%;
 }
 .color-wrapper li:nth-child(1) {
     background-color: rgb(47, 191, 243);
