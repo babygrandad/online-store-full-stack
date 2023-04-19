@@ -65,9 +65,22 @@
 
 
 /* ---------- Product-page (indivisual) ---------- */
-/* big product image --- */
 .product-areas{
     border: 1px solid;
+}
+
+/* big product image --- */
+.big-product-image{
+    width: 95%;
+    max-width: 400px;
+}
+
+/* image color pickers --- */
+.image-color-picker li:hover{
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    transform: scale(1.1);
+    transition: 0.2s;
+    cursor: pointer;
 }
 
 
