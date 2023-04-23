@@ -49,14 +49,14 @@
                       </div>
 
                       <div class="input-group mb-4" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-outline-secondary">
+                        <button type="button" class="btn btn-outline-secondary quantity-minus" onclick="this.parentNode.querySelector('.quantity-minus').stepDown()">
                             <i class="fa-sharp fa-solid fa-minus"></i>
                         </button>
                         <div class="form-floating">
                         <input type="number" class="form-control" id="user-quntity" value="1" placeholder="Quantity">
                         <label for="user-quantity">Quantity</label>
                         </div>
-                        <button type="button" class="btn btn-outline-secondary">
+                        <button type="button" class="btn btn-outline-secondary quantity-plus" onclick="this.parentNode.querySelector('.quantity-plus').stepUp()">
                             <i class="fa-sharp fa-solid fa-plus"></i>
                         </button>
                       </div>
