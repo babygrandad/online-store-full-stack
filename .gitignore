@@ -129,6 +129,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+#Adobe Photoshop file exclusion
+*.psd
+
 #My own Files that I was working on.
 plan.txt
-*.psd
