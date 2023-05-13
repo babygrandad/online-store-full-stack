@@ -18,10 +18,10 @@ app.use(express.static("public"));
 
 // SQL connection funtion
 const connection = mysql.createConnection({
-    host: 'db4free.net',
-    user: 'babygrandad',
-    password: 'SimpleDBPass@1',
-    database: 'fullstack_ostore'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_DATABASE
 });
 
 // Listen for the Node.js process to exit
