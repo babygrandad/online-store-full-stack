@@ -16,6 +16,20 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// SQL connection funtion
+const connection = mysql.createConnection({
+    host: 'db4free.net',
+    user: 'babygrandad',
+    password: 'SimpleDBPass@1',
+    database: 'fullstack_ostore'
+});
+
+// Listen for the Node.js process to exit
+process.on('exit', () => {
+    // Close the MySQL connection
+    connection.end();
+});
+
 //temporary bootstrap points for offlne use
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
@@ -60,6 +74,25 @@ app.route('/login')
 .get((req,res)=>{
     res.render('login',{pageTitle : "login"})
 });
+
+app.route('/test')
+    .get((req,res)=>{
+        let sql = "SELECT JSON_OBJECT(\n" +
+        "    'product_name', products.product_name,\n" +
+        "    'sizes', JSON_ARRAYAGG(sizes.size)\n" +
+        ") AS result\n" +
+        "FROM products\n" +
+        "LEFT JOIN product_sizes ON products.product_id = product_sizes.product_id\n" +
+        "LEFT JOIN sizes ON product_sizes.size_id = sizes.size_id\n" +
+        "GROUP BY products.product_id;";
+
+        connection.query(sql, (error, results, fields) => {
+            if (error) throw error;
+            console.log(results);
+            res.send(results); // send the results back to the client
+        });
+    });
+
 
 
 app.listen(3000, function() {
