@@ -18,7 +18,7 @@ CREATE TABLE `colors` (
   PRIMARY KEY (`color_id`),
   KEY `group_color` (`group_color`),
   CONSTRAINT `colors_ibfk_1` FOREIGN KEY (`group_color`) REFERENCES `group_colors` (`group_color`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS customers;
 CREATE TABLE `customers` (
@@ -77,7 +77,7 @@ CREATE TABLE `products` (
   `price` decimal(10,2) DEFAULT NULL,
   `quantity` int DEFAULT NULL,
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS sizes;
 CREATE TABLE `sizes` (
@@ -89,7 +89,7 @@ CREATE TABLE `sizes` (
 
 INSERT INTO categories(category_id,category_name) VALUES(1,'Sneakers'),(2,'Heels'),(3,'Boots'),(4,'Formal'),(5,'Sandles'),(6,'Crocs'),(7,'Trainers');
 
-INSERT INTO colors(color_id,color_name,color_hex,group_color) VALUES(1,'Black','#000000','Black'),(2,'White','#ffffff','White'),(3,'Grey','#808080','Grey'),(4,'Red','#ff0000','Red'),(5,'Blue','#0000ff','Blue'),(6,'Green','#008000','Green'),(7,'Orange','#ffa500','Orange'),(8,'Pink','#FFC0CB','Pink'),(9,'Silver','#C0C0C0','Silver'),(10,'Purple','#800080','Purple'),(11,'Yellow','#FFFF00','Yellow'),(12,'Brown','#A52A2A','Brown'),(14,'Line Green','#B7E241','Green'),(15,'Pumpkin','#EA9149','Orange'),(16,'Deep Lavender','#826AD9','Purple');
+INSERT INTO colors(color_id,color_name,color_hex,group_color) VALUES(1,'Black','#000000','Black'),(2,'White','#ffffff','White'),(3,'Grey','#808080','Grey'),(4,'Red','#ff0000','Red'),(5,'Blue','#0000ff','Blue'),(6,'Green','#008000','Green'),(7,'Orange','#ffa500','Orange'),(8,'Pink','#FFC0CB','Pink'),(9,'Silver','#C0C0C0','Silver'),(10,'Purple','#800080','Purple'),(11,'Yellow','#FFFF00','Yellow'),(12,'Brown','#A52A2A','Brown'),(14,'Line Green','#B7E241','Green'),(15,'Pumpkin','#EA9149','Orange'),(16,'Deep Lavender','#826AD9','Purple'),(17,'Fern Green','#73BF78','Green'),(18,'Sand','#D9AD77','Orange'),(19,'Salmon','#EC5D5D','Red');
 
 
 INSERT INTO genders(gender_id,gender) VALUES(1,'Male'),(2,'Female');
@@ -98,11 +98,11 @@ INSERT INTO group_colors(group_color,hex_code) VALUES('Black','#000000'),('Blue'
 
 INSERT INTO product_categories(product_id,category_id) VALUES(1,1),(1,7);
 
-INSERT INTO product_colors(product_id,color_id) VALUES(1,8),(1,14),(1,15),(1,16);
+INSERT INTO product_colors(product_id,color_id) VALUES(1,8),(1,14),(1,15),(1,16),(2,8),(2,17),(2,18),(2,19);
 
-INSERT INTO product_genders(product_id,gender_id) VALUES(1,1),(1,2),(1,4),(1,5),(1,6),(1,7);
+INSERT INTO product_genders(product_id,gender_id) VALUES(2,1),(2,2),(2,1),(2,2);
 
 INSERT INTO product_sizes(product_id,size_id) VALUES(1,4),(1,5),(1,6),(1,7);
 
-INSERT INTO products(product_id,product_name,product_discription,price,quantity) VALUES(1,'Nike SuperRep','Nike SuperRep is a breathable, supportive training shoe with two layers of foam for cushioning and stability, plus a burpee break for mobility.',1300.00,21);
+INSERT INTO products(product_id,product_name,product_discription,price,quantity) VALUES(1,'Nike SuperRep','Nike SuperRep is a breathable, supportive training shoe with two layers of foam for cushioning and stability, plus a burpee break for mobility.',1300.00,21),(2,'Vans Old Skool','The Vans Old Skool is a classic low-top skate shoe with a canvas and suede upper, iconic side stripe, padded collar, reinforced toe cap, and signature waffle outsole.',700.00,42);
 INSERT INTO sizes(size_id,size) VALUES(1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9),(10,10);
