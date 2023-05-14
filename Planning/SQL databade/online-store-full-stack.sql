@@ -96,13 +96,13 @@ INSERT INTO genders(gender_id,gender) VALUES(1,'Male'),(2,'Female');
 
 INSERT INTO group_colors(group_color,hex_code) VALUES('Black','#000000'),('Blue','#0000FF'),('Brown','#A52A2A'),('Green','#008000'),('Grey','#808080'),('Orange','#FFA500'),('Pink','#FFC0CB'),('Purple','#800080'),('Red','#FF0000'),('Silver','#C0C0C0'),('White','#FFFFFF'),('Yellow','#FFFF00');
 
-INSERT INTO product_categories(product_id,category_id) VALUES(1,1),(1,7);
+INSERT INTO product_categories(product_id,category_id) VALUES(1,1),(1,7),(2,1);
 
 INSERT INTO product_colors(product_id,color_id) VALUES(1,8),(1,14),(1,15),(1,16),(2,8),(2,17),(2,18),(2,19);
 
-INSERT INTO product_genders(product_id,gender_id) VALUES(2,1),(2,2),(2,1),(2,2);
+INSERT INTO product_genders(product_id,gender_id) VALUES(1,1),(1,2),(2,1),(2,2);
 
-INSERT INTO product_sizes(product_id,size_id) VALUES(1,4),(1,5),(1,6),(1,7);
+INSERT INTO product_sizes(product_id,size_id) VALUES(1,4),(1,5),(1,6),(1,7),(2,4),(2,5),(2,7),(2,9);
 
 INSERT INTO products(product_id,product_name,product_discription,price,quantity) VALUES(1,'Nike SuperRep','Nike SuperRep is a breathable, supportive training shoe with two layers of foam for cushioning and stability, plus a burpee break for mobility.',1300.00,21),(2,'Vans Old Skool','The Vans Old Skool is a classic low-top skate shoe with a canvas and suede upper, iconic side stripe, padded collar, reinforced toe cap, and signature waffle outsole.',700.00,42);
 INSERT INTO sizes(size_id,size) VALUES(1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9),(10,10);
