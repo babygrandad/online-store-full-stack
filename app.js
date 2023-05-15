@@ -77,15 +77,47 @@ app.route('/login')
 
 app.route('/test')
     .get((req,res)=>{
-        let sql = "SELECT JSON_OBJECT(\n" +
-        "    'product_name', products.product_name,\n" +
-        "    'sizes', JSON_ARRAYAGG(sizes.size)\n" +
-        ") AS result\n" +
-        "FROM products\n" +
-        "LEFT JOIN product_sizes ON products.product_id = product_sizes.product_id\n" +
-        "LEFT JOIN sizes ON product_sizes.size_id = sizes.size_id\n" +
-        "GROUP BY products.product_id;";
+        const sql = `
+        SELECT
+  products.product_id,
+  products.product_name,
+  products.product_discription,
+  products.price,
+  products.quantity,
+  (
+    SELECT JSON_ARRAYAGG(sizes.size)
+    FROM product_sizes
+    LEFT JOIN sizes ON product_sizes.size_id = sizes.size_id
+    WHERE product_sizes.product_id = products.product_id
+  ) AS sizes,
+  (
+    SELECT JSON_ARRAYAGG(genders.gender)
+    FROM product_genders
+    LEFT JOIN genders ON product_genders.gender_id = genders.gender_id
+    WHERE product_genders.product_id = products.product_id
+  ) AS genders,
+  (
+    SELECT JSON_ARRAYAGG(JSON_OBJECT('color_name', colors.color_name, 'color_hex', colors.color_hex))
+    FROM product_colors
+    LEFT JOIN colors ON product_colors.color_id = colors.color_id
+    WHERE product_colors.product_id = products.product_id
+  ) AS colors,
+  (
+    SELECT JSON_ARRAYAGG(categories.category_name)
+    FROM product_categories
+    LEFT JOIN categories ON product_categories.category_id = categories.category_id
+    WHERE product_categories.product_id = products.product_id
+  ) AS categories
+FROM
+  products
+GROUP BY
+  products.product_id,
+  products.product_name,
+  products.product_discription,
+  products.price,
+  products.quantity;
 
+  `;
         connection.query(sql, (error, results, fields) => {
             if (error) throw error;
             console.log(results);
