@@ -18,10 +18,10 @@ app.use(express.static("public"));
 
 // SQL connection funtion
 const connection = mysql.createConnection({
-    host: 'db4free.net',
-    user: 'babygrandad',
-    password: 'SimpleDBPass@1',
-    database: 'fullstack_ostore'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_DATABASE
 });
 
 // Listen for the Node.js process to exit
@@ -78,44 +78,7 @@ app.route('/login')
 app.route('/test')
     .get((req,res)=>{
         const sql = `
-        SELECT
-  products.product_id,
-  products.product_name,
-  products.product_discription,
-  products.price,
-  products.quantity,
-  (
-    SELECT JSON_ARRAYAGG(sizes.size)
-    FROM product_sizes
-    LEFT JOIN sizes ON product_sizes.size_id = sizes.size_id
-    WHERE product_sizes.product_id = products.product_id
-  ) AS sizes,
-  (
-    SELECT JSON_ARRAYAGG(genders.gender)
-    FROM product_genders
-    LEFT JOIN genders ON product_genders.gender_id = genders.gender_id
-    WHERE product_genders.product_id = products.product_id
-  ) AS genders,
-  (
-    SELECT JSON_ARRAYAGG(JSON_OBJECT('color_name', colors.color_name, 'color_hex', colors.color_hex))
-    FROM product_colors
-    LEFT JOIN colors ON product_colors.color_id = colors.color_id
-    WHERE product_colors.product_id = products.product_id
-  ) AS colors,
-  (
-    SELECT JSON_ARRAYAGG(categories.category_name)
-    FROM product_categories
-    LEFT JOIN categories ON product_categories.category_id = categories.category_id
-    WHERE product_categories.product_id = products.product_id
-  ) AS categories
-FROM
-  products
-GROUP BY
-  products.product_id,
-  products.product_name,
-  products.product_discription,
-  products.price,
-  products.quantity;
+        SELECT * from all_shoes;
 
   `;
         connection.query(sql, (error, results, fields) => {
