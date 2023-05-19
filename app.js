@@ -77,15 +77,10 @@ app.route('/login')
 
 app.route('/test')
     .get((req,res)=>{
-        let sql = "SELECT JSON_OBJECT(\n" +
-        "    'product_name', products.product_name,\n" +
-        "    'sizes', JSON_ARRAYAGG(sizes.size)\n" +
-        ") AS result\n" +
-        "FROM products\n" +
-        "LEFT JOIN product_sizes ON products.product_id = product_sizes.product_id\n" +
-        "LEFT JOIN sizes ON product_sizes.size_id = sizes.size_id\n" +
-        "GROUP BY products.product_id;";
+        const sql = `
+        SELECT * from all_shoes;
 
+  `;
         connection.query(sql, (error, results, fields) => {
             if (error) throw error;
             console.log(results);
