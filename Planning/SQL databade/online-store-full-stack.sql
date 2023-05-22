@@ -3,13 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 21, 2023 at 04:39 PM
+-- Generation Time: May 22, 2023 at 10:54 AM
 -- Server version: 8.0.33
 -- PHP Version: 7.4.3-4ubuntu2.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+02:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -28,15 +28,15 @@ SET time_zone = "+00:00";
 -- (See below for the actual view)
 --
 CREATE TABLE `all_shoes` (
-`categories` json
-,`colors` json
-,`genders` json
-,`price` decimal(10,2)
-,`product_discription` varchar(300)
-,`product_id` int
+`product_id` int
 ,`product_name` varchar(215)
+,`product_discription` varchar(300)
+,`price` decimal(10,2)
 ,`quantity` int
 ,`sizes` json
+,`genders` json
+,`colors` json
+,`categories` json
 );
 
 -- --------------------------------------------------------
@@ -225,7 +225,11 @@ INSERT INTO `products` (`product_id`, `product_name`, `product_discription`, `pr
 (11, 'Enchantment', ' A captivating fusion of style and allure. Crafted with luxurious suede, its reflective finish creates an enchanting play of light. Step into elegance that mesmerizes and leaves a lasting impression', 1500.00, 26),
 (12, 'Opulent Touch', 'Exude timeless sophistication with our suede masterpiece. Meticulously crafted with luxurious suede, impeccable detailing, and a refined silhouette, it embodies opulence and elegance. Make a statement that captures attention and admiration.\n\n\n\n\n', 800.00, 24),
 (13, 'Polished Aura', 'Radiate confidence with our patent leather masterpiece. Impeccably crafted with a glossy, light-reflecting finish, refined silhouette, and meticulous detailing, it illuminates your every step with elegance and charm. Step into a world of captivating sophistication.', 400.00, 42),
-(14, 'Empress', 'Redefine elegance with our patent leather masterpiece. Meticulously crafted with a thick sole and a small, masculine-inspired heel, it blends sophistication and comfort seamlessly. Step into regal confidence and make a lasting impression.     ', 500.00, 21);
+(14, 'Empress', 'Redefine elegance with our patent leather masterpiece. Meticulously crafted with a thick sole and a small, masculine-inspired heel, it blends sophistication and comfort seamlessly. Step into regal confidence and make a lasting impression.     ', 500.00, 21),
+(15, 'Palladium Monochome', 'Engineered for adventure with rugged durability and timeless style. Crafted with premium materials, a sturdy outsole, and a comfortable fit, it\'s the ultimate companion for explorations and urban journeys. Embrace the spirit of exploration.', 1800.00, 14),
+(16, 'Serpent Shine', 'Unleash your boldness with our striking, large-scale design. Crafted with glossy patent leather, a sleek silhouette, captivating serpent-like patterns, and a confident heel, it exudes fierce allure and elevated style. Step into the spotlight and embrace your inner enchantress.', 900.00, 22),
+(17, 'Snuggy', 'Embrace warmth and comfort with our soft fabric and cotton-filled masterpiece. Designed for chilly days, it offers plush insulation and a snug fit, ensuring cozy adventures in style. Step into winter bliss.', 180.00, 44),
+(18, 'All Star Run Hike Platform', 'Elevate your style with a fusion of sporty and edgy. Featuring a platform sole, hightop design, and iconic All Star branding, it\'s a bold statement for urban explorers. Embrace the heights of fashion and functionality.', 1800.00, 37);
 
 -- --------------------------------------------------------
 
@@ -265,7 +269,15 @@ INSERT INTO `product_categories` (`product_id`, `category_id`) VALUES
 (11, 4),
 (12, 4),
 (13, 4),
-(14, 4);
+(14, 4),
+(15, 1),
+(15, 3),
+(16, 2),
+(16, 3),
+(16, 4),
+(17, 3),
+(18, 1),
+(18, 3);
 
 -- --------------------------------------------------------
 
@@ -389,7 +401,14 @@ INSERT INTO `product_genders` (`product_id`, `gender_id`) VALUES
 (12, 1),
 (12, 2),
 (13, 1),
-(14, 2);
+(14, 2),
+(15, 1),
+(15, 2),
+(16, 2),
+(17, 1),
+(17, 2),
+(18, 1),
+(18, 2);
 
 -- --------------------------------------------------------
 
@@ -582,7 +601,7 @@ ALTER TABLE `genders`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `product_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `sizes`
