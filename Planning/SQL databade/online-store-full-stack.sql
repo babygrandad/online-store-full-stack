@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 22, 2023 at 10:54 AM
+-- Generation Time: May 23, 2023 at 09:40 AM
 -- Server version: 8.0.33
 -- PHP Version: 7.4.3-4ubuntu2.18
 
@@ -28,15 +28,15 @@ SET time_zone = "+02:00";
 -- (See below for the actual view)
 --
 CREATE TABLE `all_shoes` (
-`product_id` int
-,`product_name` varchar(215)
-,`product_discription` varchar(300)
+`categories` json
+,`colors` json
+,`genders` json
 ,`price` decimal(10,2)
+,`product_discription` varchar(300)
+,`product_id` int
+,`product_name` varchar(215)
 ,`quantity` int
 ,`sizes` json
-,`genders` json
-,`colors` json
-,`categories` json
 );
 
 -- --------------------------------------------------------
@@ -357,7 +357,7 @@ INSERT INTO `product_colors` (`product_id`, `color_id`) VALUES
 (15, 22),
 (15, 50),
 (16, 1),
-(16, 51),
+(16, 53),
 (17, 3),
 (17, 8),
 (17, 23),
@@ -365,6 +365,7 @@ INSERT INTO `product_colors` (`product_id`, `color_id`) VALUES
 (18, 11),
 (18, 17),
 (18, 22);
+
 
 -- --------------------------------------------------------
 
@@ -481,7 +482,23 @@ INSERT INTO `product_sizes` (`product_id`, `size_id`) VALUES
 (14, 3),
 (14, 4),
 (14, 5),
-(14, 6);
+(14, 6),
+(15, 5),
+(15, 7),
+(15, 8),
+(15, 9),
+(16, 4),
+(16, 5),
+(16, 6),
+(16, 7),
+(17, 3),
+(17, 4),
+(17, 5),
+(17, 6),
+(18, 5),
+(18, 6),
+(18, 7),
+(18, 8);
 
 -- --------------------------------------------------------
 
@@ -513,11 +530,32 @@ INSERT INTO `sizes` (`size_id`, `size`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `temp_shoe_colors`
+-- (See below for the actual view)
+--
+CREATE TABLE `temp_shoe_colors` (
+`colors` json
+,`product_id` int
+,`product_name` varchar(215)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `all_shoes`
 --
 DROP TABLE IF EXISTS `all_shoes`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `all_shoes`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, `products`.`product_discription` AS `product_discription`, `products`.`price` AS `price`, `products`.`quantity` AS `quantity`, (select json_arrayagg(`sizes`.`size`) from (`product_sizes` left join `sizes` on((`product_sizes`.`size_id` = `sizes`.`size_id`))) where (`product_sizes`.`product_id` = `products`.`product_id`)) AS `sizes`, (select json_arrayagg(`genders`.`gender`) from (`product_genders` left join `genders` on((`product_genders`.`gender_id` = `genders`.`gender_id`))) where (`product_genders`.`product_id` = `products`.`product_id`)) AS `genders`, (select json_arrayagg(json_object('color_name',`colors`.`color_name`,'color_hex',`colors`.`color_hex`)) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors`, (select json_arrayagg(`categories`.`category_name`) from (`product_categories` left join `categories` on((`product_categories`.`category_id` = `categories`.`category_id`))) where (`product_categories`.`product_id` = `products`.`product_id`)) AS `categories` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name`, `products`.`product_discription`, `products`.`price`, `products`.`quantity` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `temp_shoe_colors`
+--
+DROP TABLE IF EXISTS `temp_shoe_colors`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `temp_shoe_colors`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, (select json_arrayagg(`colors`.`color_name`) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name` ;
 
 --
 -- Indexes for dumped tables
