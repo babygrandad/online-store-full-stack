@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 23, 2023 at 09:40 AM
+-- Generation Time: May 23, 2023 at 10:24 AM
 -- Server version: 8.0.33
 -- PHP Version: 7.4.3-4ubuntu2.18
 
@@ -356,16 +356,15 @@ INSERT INTO `product_colors` (`product_id`, `color_id`) VALUES
 (15, 11),
 (15, 22),
 (15, 50),
-(16, 1),
-(16, 53),
 (17, 3),
 (17, 8),
 (17, 23),
 (18, 1),
 (18, 11),
 (18, 17),
-(18, 22);
-
+(18, 22),
+(16, 1),
+(16, 53);
 
 -- --------------------------------------------------------
 
@@ -534,7 +533,7 @@ INSERT INTO `sizes` (`size_id`, `size`) VALUES
 -- (See below for the actual view)
 --
 CREATE TABLE `temp_shoe_colors` (
-`colors` json
+`colors` text
 ,`product_id` int
 ,`product_name` varchar(215)
 );
@@ -555,7 +554,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `
 --
 DROP TABLE IF EXISTS `temp_shoe_colors`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `temp_shoe_colors`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, (select json_arrayagg(`colors`.`color_name`) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `temp_shoe_colors`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, group_concat(`colors`.`color_name` separator ', ') AS `colors` FROM ((`products` left join `product_colors` on((`products`.`product_id` = `product_colors`.`product_id`))) left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) GROUP BY `products`.`product_id`, `products`.`product_name` ;
 
 --
 -- Indexes for dumped tables
