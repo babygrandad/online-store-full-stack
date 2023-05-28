@@ -8,44 +8,43 @@
                 <div class="row text-center">
                     <div class="col-12 m-auto">
                         <!-- <h1>Image content here</h1> -->
-                        <img src="/assets/images/shoe.jpg" alt="" class="big-product-image" />
+                        <img src="/assets/images/shoes/<%= shoe[0].product_id %> - <%= shoe[0].colors[0].color_name %>.png" alt="" class="big-product-image" />
                     </div>
                     <div class="col-12 m-auto">
                         <!-- <h1>Colour selectors here</h1> -->
                         <span>Colours</span>
                         <ul class="available-options-wrapper color-wrapper final-item-picker justify-content-center">
-                            <li>BU</li>
-                            <li>PK</li>
-                            <li>MG</li>
-                            <li>YL</li>
+                            <%shoe[0].colors.forEach((hex) => {%>
+                                <li style="background-color: <%= hex.color_hex%>;"></li>
+                                <% }); %>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 product-areas px-3">
-                <h3>Product name</h3>
-                <h5>price</h5>
+                <h3><%= shoe[0].product_name%></h3>
+                <h5>R <%= shoe[0].price%></h5>
                 <hr>
-                <p>Product Discription: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consectetur earum minus impedit voluptate eum laborum. Et culpa quaerat, impedit incidunt nisi consequatur dolores non laudantium optio ullam earum eligendi.</p>
+                <p><%= shoe[0].product_description%></p>
                 <form id="purchase-form" action="" method="post">
                     <div class="form-floating mb-4">
                         <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                          <option selected>Pick your size</option>
-                            <%- include('components/indivisual-product-page/colour-option') %>
-                            <%- include('components/indivisual-product-page/colour-option') %>
-                            <%- include('components/indivisual-product-page/colour-option') %>
-                            <%- include('components/indivisual-product-page/colour-option') %>
+                          <option selected>Choose your colour</option>
+                          <% shoe[0].colors.forEach((color)=> { %>
+                            <%- include('components/indivisual-product-page/colour-option', {color : color.color_name}) %>
+                          <% }); %>
                         </select>
                         <label for="floatingSelect">Colours</label>
                       </div>
 
                       <div class="form-floating mb-4">
                         <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                          <option selected>Choose your colour</option>
-                          <%- include('components/indivisual-product-page/size-option') %>
-                          <%- include('components/indivisual-product-page/size-option') %>
-                          <%- include('components/indivisual-product-page/size-option') %>
-                          <%- include('components/indivisual-product-page/size-option') %>
+                          <option selected>Choose your Size</option>
+                          <% shoe[0].sizes.forEach((size)=> { %>
+                            <%- include('components/indivisual-product-page/size-option', {size : size}) %>
+                          <% }); %>
+                          
+                          
                         </select>
                         <label for="floatingSelect">Sizes</label>
                       </div>
