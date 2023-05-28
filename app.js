@@ -52,7 +52,14 @@ app.route('/about')
 
 app.route('/products')
 .get((req,res)=>{
-    res.render('products',{pageTitle : "Shop"})
+
+    const sql = `SELECT * from all_shoes;`;
+    connection.query(sql, (error, results, fields) => {
+        if (error) throw error;
+        console.log(results);
+
+        res.render('products',{pageTitle : "Shop", results : results}); // send the results back to the client
+    });
 });
 
 app.route('/product')
@@ -77,15 +84,15 @@ app.route('/login')
 
 app.route('/test')
     .get((req,res)=>{
-        const sql = `
-        SELECT * from all_shoes;
+//         const sql = `
+//         SELECT * from all_shoes;
 
-  `;
-        connection.query(sql, (error, results, fields) => {
-            if (error) throw error;
-            console.log(results);
-            res.send(results); // send the results back to the client
-        });
+//   `;
+//         connection.query(sql, (error, results, fields) => {
+//             if (error) throw error;
+//             console.log(results);
+//             res.send(results); // send the results back to the client
+//         });
     });
 
 

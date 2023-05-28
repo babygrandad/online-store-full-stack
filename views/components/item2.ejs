@@ -5,17 +5,13 @@
             <h5 class="pt-2">Shoe Name</h5>
             <span>Colours</span>
             <ul class="available-options-wrapper color-wrapper">
-                <li>BU</li>
-                <li>PK</li>
-                <li>MG</li>
-                <li>YL</li>
+                <%- shoe.colors.map(color => `<li style="background-color: ${color.color_hex};"></li>`).join('') %>
             </ul>
             <span>Sizes</span>
             <ul class="available-options-wrapper sizes-wrapper">
-                <li>4</li>
-                <li>5</li>
-                <li>8</li>
-                <li>10</li>
+                <% shoe.sizes.forEach((size) => { %>
+                    <li><%= size %></li>
+                <% }); %>
             </ul>
         </a>
     </div>

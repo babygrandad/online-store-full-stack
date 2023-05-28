@@ -18,15 +18,9 @@
             </div>
             <div class="col-md-9">
                 <div class="row">
-                    <%- include('components/item2') %>
-                    <%- include('components/item2') %>
-                    <%- include('components/item2') %>
-                    <%- include('components/item2') %>
-
-                    <%- include('components/item2') %>
-                    <%- include('components/item2') %>
-                    <%- include('components/item2') %>
-                    <%- include('components/item2') %>
+                    <% results.forEach((shoe) => { %>
+                        <%- include('components/item2', { shoe: shoe}) %>
+                    <% }); %>               
                 </div>
             </div>
         </div>
