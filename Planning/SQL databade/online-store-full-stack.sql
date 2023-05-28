@@ -3,13 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 27, 2023 at 08:22 PM
+-- Generation Time: May 28, 2023 at 01:43 PM
 -- Server version: 8.0.33
 -- PHP Version: 7.4.3-4ubuntu2.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+02:00";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -30,7 +30,7 @@ SET time_zone = "+02:00";
 CREATE TABLE `all_shoes` (
 `product_id` int
 ,`product_name` varchar(215)
-,`product_discription` varchar(300)
+,`product_description` varchar(300)
 ,`price` decimal(10,2)
 ,`quantity` int
 ,`sizes` json
@@ -202,7 +202,7 @@ INSERT INTO `group_colors` (`group_color`, `hex_code`) VALUES
 CREATE TABLE `products` (
   `product_id` int NOT NULL,
   `product_name` varchar(215) DEFAULT NULL,
-  `product_discription` varchar(300) DEFAULT NULL,
+  `product_description` varchar(300) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `quantity` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -211,7 +211,7 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `product_name`, `product_discription`, `price`, `quantity`) VALUES
+INSERT INTO `products` (`product_id`, `product_name`, `product_description`, `price`, `quantity`) VALUES
 (1, 'Nike SuperRep', 'Nike SuperRep is a breathable, supportive training shoe with two layers of foam for cushioning and stability, plus a burpee break for mobility.', 1300.00, 21),
 (2, 'Vans Old Skool', 'The Vans Old Skool is a classic low-top skate shoe with a canvas and suede upper, iconic side stripe, padded collar, reinforced toe cap, and signature waffle outsole.', 700.00, 42),
 (3, 'Nike AirStride', 'The Nike AirStride: a pinnacle of style and performance. With its cushioned sole, breathable materials, and versatile design, it\'s the ultimate choice for athletic prowess and everyday fashion. Elevate your game.', 1000.00, 36),
@@ -328,7 +328,6 @@ INSERT INTO `product_colors` (`product_id`, `color_id`) VALUES
 (8, 33),
 (8, 34),
 (9, 1),
-(9, 28),
 (9, 35),
 (9, 36),
 (10, 1),
@@ -356,18 +355,16 @@ INSERT INTO `product_colors` (`product_id`, `color_id`) VALUES
 (15, 11),
 (15, 22),
 (15, 50),
-(16, 1),
-(16, 53),
 (17, 3),
 (17, 8),
 (17, 23),
-(18, 2),
 (18, 11),
 (18, 17),
-(18, 22);
-
-
-
+(18, 22),
+(16, 53),
+(16, 1),
+(18, 2),
+(9, 28);
 
 -- --------------------------------------------------------
 
@@ -548,7 +545,7 @@ CREATE TABLE `temp_shoe_colors` (
 --
 DROP TABLE IF EXISTS `all_shoes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `all_shoes`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, `products`.`product_discription` AS `product_discription`, `products`.`price` AS `price`, `products`.`quantity` AS `quantity`, (select json_arrayagg(`sizes`.`size`) from (`product_sizes` left join `sizes` on((`product_sizes`.`size_id` = `sizes`.`size_id`))) where (`product_sizes`.`product_id` = `products`.`product_id`)) AS `sizes`, (select json_arrayagg(`genders`.`gender`) from (`product_genders` left join `genders` on((`product_genders`.`gender_id` = `genders`.`gender_id`))) where (`product_genders`.`product_id` = `products`.`product_id`)) AS `genders`, (select json_arrayagg(json_object('color_name',`colors`.`color_name`,'color_hex',`colors`.`color_hex`)) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors`, (select json_arrayagg(`categories`.`category_name`) from (`product_categories` left join `categories` on((`product_categories`.`category_id` = `categories`.`category_id`))) where (`product_categories`.`product_id` = `products`.`product_id`)) AS `categories` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name`, `products`.`product_discription`, `products`.`price`, `products`.`quantity` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `all_shoes`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, `products`.`product_description` AS `product_description`, `products`.`price` AS `price`, `products`.`quantity` AS `quantity`, (select json_arrayagg(`sizes`.`size`) from (`product_sizes` left join `sizes` on((`product_sizes`.`size_id` = `sizes`.`size_id`))) where (`product_sizes`.`product_id` = `products`.`product_id`)) AS `sizes`, (select json_arrayagg(`genders`.`gender`) from (`product_genders` left join `genders` on((`product_genders`.`gender_id` = `genders`.`gender_id`))) where (`product_genders`.`product_id` = `products`.`product_id`)) AS `genders`, (select json_arrayagg(json_object('color_name',`colors`.`color_name`,'color_hex',`colors`.`color_hex`)) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors`, (select json_arrayagg(`categories`.`category_name`) from (`product_categories` left join `categories` on((`product_categories`.`category_id` = `categories`.`category_id`))) where (`product_categories`.`product_id` = `products`.`product_id`)) AS `categories` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name`, `products`.`product_description`, `products`.`price`, `products`.`quantity` ;
 
 -- --------------------------------------------------------
 
