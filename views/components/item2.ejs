@@ -1,13 +1,15 @@
-<div class="col-sm-6 col-lg-4 col-xxl-3 py-3">
+<div class="col-sm-6 col-lg-4 py-3">
     <div class="item-wrapper p-3 shadows">
         <a href="" class="pointer-link">
             <!-- <img src="/assets/images/shoe.jpg" alt="" class="g-image item-image"> -->
             <img src="/assets/images/shoes/<%= shoe.product_id %> - <%= shoe.colors[0].color_name %>.png
             " alt="" class="g-image item-image">
-            <h5 class="pt-2">Shoe Name</h5>
+            <h5 class="pt-2"><%= shoe.product_name%></h5>
             <span>Colours</span>
             <ul class="available-options-wrapper color-wrapper">
-                <%- shoe.colors.map(color => `<li style="background-color: ${color.color_hex};"></li>`).join('') %>
+                <%shoe.colors.forEach((hex) => {%>
+                <li style="background-color: <%= hex.color_hex%>;"></li>
+                <% }); %>               
             </ul>
             <span>Sizes</span>
             <ul class="available-options-wrapper sizes-wrapper">
