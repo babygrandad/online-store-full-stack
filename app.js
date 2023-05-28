@@ -41,8 +41,7 @@ app.route('/')
     const sql = `SELECT * from all_shoes;`;
     connection.query(sql, (error, results, fields) => {
         if (error) throw error;
-        console.log(results);
-
+        
     res.render('home',{pageTitle : "Home",  results : results}); // send the results back to the client
     });
 });
@@ -63,7 +62,6 @@ app.route('/products')
     const sql = `SELECT * from all_shoes ;`;
     connection.query(sql, (error, results, fields) => {
         if (error) throw error;
-        console.log(results);
 
         res.render('products',{pageTitle : "Shop", results : results}); // send the results back to the client
     });
@@ -77,8 +75,7 @@ app.route('/product')
     const sql = `SELECT * from all_shoes WHERE product_id =`+ requestedShoe + ` ;`;
     connection.query(sql, (error, results, fields) => {
         if (error) throw error;
-        console.log(results);
-
+        
         res.render('product',{pageTitle : "product" , shoe : results}); // send the results back to the client
     });
 });
