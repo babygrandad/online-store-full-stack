@@ -39,6 +39,7 @@
     min-width: 306px;
     object-fit: contain;
     margin: 0 12px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 .row_items{
     display: flex;
