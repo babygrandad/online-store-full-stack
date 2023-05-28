@@ -37,7 +37,14 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 
 app.route('/')
 .get((req,res)=>{
-    res.render('home',{pageTitle : "Home"})
+
+    const sql = `SELECT * from all_shoes;`;
+    connection.query(sql, (error, results, fields) => {
+        if (error) throw error;
+        console.log(results);
+
+    res.render('home',{pageTitle : "Home",  results : results}); // send the results back to the client
+    });
 });
 
 app.route('/contact')
@@ -53,7 +60,7 @@ app.route('/about')
 app.route('/products')
 .get((req,res)=>{
 
-    const sql = `SELECT * from all_shoes;`;
+    const sql = `SELECT * from all_shoes ;`;
     connection.query(sql, (error, results, fields) => {
         if (error) throw error;
         console.log(results);
@@ -90,19 +97,6 @@ app.route('/login')
 .get((req,res)=>{
     res.render('login',{pageTitle : "login"})
 });
-
-app.route('/test')
-    .get((req,res)=>{
-//         const sql = `
-//         SELECT * from all_shoes;
-
-//   `;
-//         connection.query(sql, (error, results, fields) => {
-//             if (error) throw error;
-//             console.log(results);
-//             res.send(results); // send the results back to the client
-//         });
-    });
 
 
 

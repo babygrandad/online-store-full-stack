@@ -1,20 +1,19 @@
     <div class="row_item row_itemLarge">
         <div class="item-wrapper p-3">
-            <img src="/assets/images/shoe.jpg" alt="" class="g-image item-image">
-            <h5 class="pt-2">Shoe Name</h5>
+            <img src="/assets/images/shoes/<%= shoe.product_id %> - <%= shoe.colors[0].color_name %>.png
+            " alt="" class="g-image item-image">
+            <h5 class="pt-2"><%= shoe.product_name%></h5>
             <span>Colours</span>
             <ul class="available-options-wrapper color-wrapper">
-                <li>BU</li>
-                <li>PK</li>
-                <li>MG</li>
-                <li>YL</li>
+                <%shoe.colors.forEach((hex) => {%>
+                    <li style="background-color: <%= hex.color_hex%>;"></li>
+                <% }); %>  
             </ul>
             <span>Sizes</span>
             <ul class="available-options-wrapper sizes-wrapper">
-                <li>4</li>
-                <li>5</li>
-                <li>8</li>
-                <li>10</li>
+                <% shoe.sizes.forEach((size) => { %>
+                    <li><%= size %></li>
+                <% }); %>
             </ul>
         </div>
     </div>

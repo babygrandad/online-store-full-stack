@@ -105,6 +105,10 @@ input[type=number]::-webkit-outer-spin-button {
 /* ---------- Individual Components ---------- */
 
 /* --- Item component --- */
+.item-wrapper{
+    min-width: 100%;
+}
+
 .item-image{
     border-radius: 10px;
 }
