@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 28, 2023 at 01:43 PM
+-- Generation Time: May 30, 2023 at 03:55 PM
 -- Server version: 8.0.33
 -- PHP Version: 7.4.3-4ubuntu2.18
 
@@ -28,15 +28,17 @@ SET time_zone = "+00:00";
 -- (See below for the actual view)
 --
 CREATE TABLE `all_shoes` (
-`product_id` int
-,`product_name` varchar(215)
-,`product_description` varchar(300)
+`categories` json
+,`colors` json
+,`featured` int
+,`genders` json
+,`new` int
 ,`price` decimal(10,2)
+,`product_description` varchar(300)
+,`product_id` int
+,`product_name` varchar(215)
 ,`quantity` int
 ,`sizes` json
-,`genders` json
-,`colors` json
-,`categories` json
 );
 
 -- --------------------------------------------------------
@@ -204,32 +206,34 @@ CREATE TABLE `products` (
   `product_name` varchar(215) DEFAULT NULL,
   `product_description` varchar(300) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `quantity` int DEFAULT NULL
+  `quantity` int DEFAULT NULL,
+  `featured` int NOT NULL DEFAULT '0',
+  `new` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `product_name`, `product_description`, `price`, `quantity`) VALUES
-(1, 'Nike SuperRep', 'Nike SuperRep is a breathable, supportive training shoe with two layers of foam for cushioning and stability, plus a burpee break for mobility.', 1300.00, 21),
-(2, 'Vans Old Skool', 'The Vans Old Skool is a classic low-top skate shoe with a canvas and suede upper, iconic side stripe, padded collar, reinforced toe cap, and signature waffle outsole.', 700.00, 42),
-(3, 'Nike AirStride', 'The Nike AirStride: a pinnacle of style and performance. With its cushioned sole, breathable materials, and versatile design, it\'s the ultimate choice for athletic prowess and everyday fashion. Elevate your game.', 1000.00, 36),
-(4, 'Aldo SwiftStride', 'The Aldo SwiftStride: Experience the perfect blend of style and performance. With its sleek design, cushioned comfort, and reliable traction, it\'s the ideal choice for all-day wear. Step up your game with confidence.', 800.00, 17),
-(5, 'SunBreeze', 'The SunBreeze Flipflop: Stylish and comfortable, perfect for beach days and summer strolls. Premium materials, cushioned footbed, and durable outsole for relaxed adventures. Casual elegance redefined.', 120.00, 56),
-(6, 'RVCA Breezy Step', 'The RVCA Breezy Step: Embrace summer with lightweight comfort. Featuring a soft, breathable footbed and flexible outsole, it\'s your go-to for effortless relaxation and beachside adventures. Experience ultimate freedom for your feet.', 120.00, 60),
-(7, 'Cloud Esase', 'The CloudEase Slip-On Sandal: Effortless comfort awaits with our lightweight foam sandal. Slip into cloud-like softness and enjoy a breezy stride for casual outings and relaxing moments. Embrace soothing relaxation for your feet.', 250.00, 32),
-(8, 'Foam Glide', 'Experience the next level of comfort with our foam-infused flip-flops. Enjoy plush cushioning, lightweight support, and a flexible fit for ultimate relaxation and carefree adventures. Embrace foam luxury for your feet.', 180.00, 25),
-(9, 'LuxeSuede', 'Elevate your style with timeless sophistication. Crafted with premium suede, sleek silhouette, and a comfortable heel, it\'s the epitome of elegance and refinement. Step into effortless glamour and make a statement.', 1400.00, 36),
-(10, 'Radiant Gleam', 'Illuminate your every step with our shining leather heel. Imbued with elegance and a sleek silhouette, it captivates with its lustrous finish and adds a touch of glamour to any occasion. Shine bright with sophistication.', 500.00, 23),
-(11, 'Enchantment', ' A captivating fusion of style and allure. Crafted with luxurious suede, its reflective finish creates an enchanting play of light. Step into elegance that mesmerizes and leaves a lasting impression', 1500.00, 26),
-(12, 'Opulent Touch', 'Exude timeless sophistication with our suede masterpiece. Meticulously crafted with luxurious suede, impeccable detailing, and a refined silhouette, it embodies opulence and elegance. Make a statement that captures attention and admiration.\n\n\n\n\n', 800.00, 24),
-(13, 'Polished Aura', 'Radiate confidence with our patent leather masterpiece. Impeccably crafted with a glossy, light-reflecting finish, refined silhouette, and meticulous detailing, it illuminates your every step with elegance and charm. Step into a world of captivating sophistication.', 400.00, 42),
-(14, 'Empress', 'Redefine elegance with our patent leather masterpiece. Meticulously crafted with a thick sole and a small, masculine-inspired heel, it blends sophistication and comfort seamlessly. Step into regal confidence and make a lasting impression.     ', 500.00, 21),
-(15, 'Palladium Monochome', 'Engineered for adventure with rugged durability and timeless style. Crafted with premium materials, a sturdy outsole, and a comfortable fit, it\'s the ultimate companion for explorations and urban journeys. Embrace the spirit of exploration.', 1800.00, 14),
-(16, 'Serpent Shine', 'Unleash your boldness with our striking, large-scale design. Crafted with glossy patent leather, a sleek silhouette, captivating serpent-like patterns, and a confident heel, it exudes fierce allure and elevated style. Step into the spotlight and embrace your inner enchantress.', 900.00, 22),
-(17, 'Snuggy', 'Embrace warmth and comfort with our soft fabric and cotton-filled masterpiece. Designed for chilly days, it offers plush insulation and a snug fit, ensuring cozy adventures in style. Step into winter bliss.', 180.00, 44),
-(18, 'All Star Run Hike Platform', 'Elevate your style with a fusion of sporty and edgy. Featuring a platform sole, hightop design, and iconic All Star branding, it\'s a bold statement for urban explorers. Embrace the heights of fashion and functionality.', 1800.00, 37);
+INSERT INTO `products` (`product_id`, `product_name`, `product_description`, `price`, `quantity`, `featured`, `new`) VALUES
+(1, 'Nike SuperRep', 'Nike SuperRep is a breathable, supportive training shoe with two layers of foam for cushioning and stability, plus a burpee break for mobility.', 1300.00, 21, 1, 1),
+(2, 'Vans Old Skool', 'The Vans Old Skool is a classic low-top skate shoe with a canvas and suede upper, iconic side stripe, padded collar, reinforced toe cap, and signature waffle outsole.', 700.00, 42, 0, 0),
+(3, 'Nike AirStride', 'The Nike AirStride: a pinnacle of style and performance. With its cushioned sole, breathable materials, and versatile design, it\'s the ultimate choice for athletic prowess and everyday fashion. Elevate your game.', 1000.00, 36, 0, 0),
+(4, 'Aldo SwiftStride', 'The Aldo SwiftStride: Experience the perfect blend of style and performance. With its sleek design, cushioned comfort, and reliable traction, it\'s the ideal choice for all-day wear. Step up your game with confidence.', 800.00, 17, 0, 0),
+(5, 'SunBreeze', 'The SunBreeze Flipflop: Stylish and comfortable, perfect for beach days and summer strolls. Premium materials, cushioned footbed, and durable outsole for relaxed adventures. Casual elegance redefined.', 120.00, 56, 0, 0),
+(6, 'RVCA Breezy Step', 'The RVCA Breezy Step: Embrace summer with lightweight comfort. Featuring a soft, breathable footbed and flexible outsole, it\'s your go-to for effortless relaxation and beachside adventures. Experience ultimate freedom for your feet.', 120.00, 60, 0, 0),
+(7, 'Cloud Esase', 'The CloudEase Slip-On Sandal: Effortless comfort awaits with our lightweight foam sandal. Slip into cloud-like softness and enjoy a breezy stride for casual outings and relaxing moments. Embrace soothing relaxation for your feet.', 250.00, 32, 0, 1),
+(8, 'Foam Glide', 'Experience the next level of comfort with our foam-infused flip-flops. Enjoy plush cushioning, lightweight support, and a flexible fit for ultimate relaxation and carefree adventures. Embrace foam luxury for your feet.', 180.00, 25, 0, 0),
+(9, 'LuxeSuede', 'Elevate your style with timeless sophistication. Crafted with premium suede, sleek silhouette, and a comfortable heel, it\'s the epitome of elegance and refinement. Step into effortless glamour and make a statement.', 1400.00, 36, 0, 0),
+(10, 'Radiant Gleam', 'Illuminate your every step with our shining leather heel. Imbued with elegance and a sleek silhouette, it captivates with its lustrous finish and adds a touch of glamour to any occasion. Shine bright with sophistication.', 500.00, 23, 0, 0),
+(11, 'Enchantment', ' A captivating fusion of style and allure. Crafted with luxurious suede, its reflective finish creates an enchanting play of light. Step into elegance that mesmerizes and leaves a lasting impression', 1500.00, 26, 1, 0),
+(12, 'Opulent Touch', 'Exude timeless sophistication with our suede masterpiece. Meticulously crafted with luxurious suede, impeccable detailing, and a refined silhouette, it embodies opulence and elegance. Make a statement that captures attention and admiration.\n\n\n\n\n', 800.00, 24, 0, 1),
+(13, 'Polished Aura', 'Radiate confidence with our patent leather masterpiece. Impeccably crafted with a glossy, light-reflecting finish, refined silhouette, and meticulous detailing, it illuminates your every step with elegance and charm. Step into a world of captivating sophistication.', 400.00, 42, 0, 0),
+(14, 'Empress', 'Redefine elegance with our patent leather masterpiece. Meticulously crafted with a thick sole and a small, masculine-inspired heel, it blends sophistication and comfort seamlessly. Step into regal confidence and make a lasting impression.     ', 500.00, 21, 0, 1),
+(15, 'Palladium Monochome', 'Engineered for adventure with rugged durability and timeless style. Crafted with premium materials, a sturdy outsole, and a comfortable fit, it\'s the ultimate companion for explorations and urban journeys. Embrace the spirit of exploration.', 1800.00, 14, 0, 0),
+(16, 'Serpent Shine', 'Unleash your boldness with our striking, large-scale design. Crafted with glossy patent leather, a sleek silhouette, captivating serpent-like patterns, and a confident heel, it exudes fierce allure and elevated style. Step into the spotlight and embrace your inner enchantress.', 900.00, 22, 0, 0),
+(17, 'Snuggy', 'Embrace warmth and comfort with our soft fabric and cotton-filled masterpiece. Designed for chilly days, it offers plush insulation and a snug fit, ensuring cozy adventures in style. Step into winter bliss.', 180.00, 44, 0, 1),
+(18, 'All Star Run Hike Platform', 'Elevate your style with a fusion of sporty and edgy. Featuring a platform sole, hightop design, and iconic All Star branding, it\'s a bold statement for urban explorers. Embrace the heights of fashion and functionality.', 1800.00, 37, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -533,9 +537,9 @@ INSERT INTO `sizes` (`size_id`, `size`) VALUES
 -- (See below for the actual view)
 --
 CREATE TABLE `temp_shoe_colors` (
-`product_id` int
+`colors` text
+,`product_id` int
 ,`product_name` varchar(215)
-,`colors` text
 );
 
 -- --------------------------------------------------------
@@ -545,7 +549,7 @@ CREATE TABLE `temp_shoe_colors` (
 --
 DROP TABLE IF EXISTS `all_shoes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `all_shoes`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, `products`.`product_description` AS `product_description`, `products`.`price` AS `price`, `products`.`quantity` AS `quantity`, (select json_arrayagg(`sizes`.`size`) from (`product_sizes` left join `sizes` on((`product_sizes`.`size_id` = `sizes`.`size_id`))) where (`product_sizes`.`product_id` = `products`.`product_id`)) AS `sizes`, (select json_arrayagg(`genders`.`gender`) from (`product_genders` left join `genders` on((`product_genders`.`gender_id` = `genders`.`gender_id`))) where (`product_genders`.`product_id` = `products`.`product_id`)) AS `genders`, (select json_arrayagg(json_object('color_name',`colors`.`color_name`,'color_hex',`colors`.`color_hex`)) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors`, (select json_arrayagg(`categories`.`category_name`) from (`product_categories` left join `categories` on((`product_categories`.`category_id` = `categories`.`category_id`))) where (`product_categories`.`product_id` = `products`.`product_id`)) AS `categories` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name`, `products`.`product_description`, `products`.`price`, `products`.`quantity` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `all_shoes`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, `products`.`product_description` AS `product_description`, `products`.`price` AS `price`, `products`.`quantity` AS `quantity`, `products`.`new` AS `new`, `products`.`featured` AS `featured`, (select json_arrayagg(`sizes`.`size`) from (`product_sizes` left join `sizes` on((`product_sizes`.`size_id` = `sizes`.`size_id`))) where (`product_sizes`.`product_id` = `products`.`product_id`)) AS `sizes`, (select json_arrayagg(`genders`.`gender`) from (`product_genders` left join `genders` on((`product_genders`.`gender_id` = `genders`.`gender_id`))) where (`product_genders`.`product_id` = `products`.`product_id`)) AS `genders`, (select json_arrayagg(json_object('color_name',`colors`.`color_name`,'color_hex',`colors`.`color_hex`)) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors`, (select json_arrayagg(`categories`.`category_name`) from (`product_categories` left join `categories` on((`product_categories`.`category_id` = `categories`.`category_id`))) where (`product_categories`.`product_id` = `products`.`product_id`)) AS `categories` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name`, `products`.`product_description`, `products`.`price`, `products`.`quantity`, `products`.`new`, `products`.`featured` ;
 
 -- --------------------------------------------------------
 
