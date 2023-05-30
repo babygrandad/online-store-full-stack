@@ -95,7 +95,7 @@ app.route('/login')
     res.render('login',{pageTitle : "login"})
 });
 
-app.route('test')
+app.route('/test')
 .get((req,res)=>{
 
     const sql = `SELECT * from all_shoes;`;
