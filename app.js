@@ -95,7 +95,16 @@ app.route('/login')
     res.render('login',{pageTitle : "login"})
 });
 
+app.route('test')
+.get((req,res)=>{
 
+    const sql = `SELECT * from all_shoes;`;
+    connection.query(sql, (error, results, fields) => {
+        if (error) throw error;
+        
+    res.send(results); // send the results back to the client
+    });
+});
 
 app.listen(3000, function() {
     console.log("Server started on port 3000");
