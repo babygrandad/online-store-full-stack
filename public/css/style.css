@@ -47,6 +47,11 @@
     overflow-x: scroll;
 }
 
+.row_items .item-wrapper img{
+    min-width: 250px;
+
+}
+
 
 /* ---------- About-page ---------- */
 /* Hero --- */

@@ -18,10 +18,10 @@
 <section class="item-group slider">
     <div class="container py-3">
         <h1>New Items</h1>
-        <div class="row_items py-3">
+        <div class="row_items p-3 gap-4">
             <!-- cards in here -->
             <% results.forEach((shoe) => { %>
-                <%- include('components/rowItem', { shoe: shoe}) %>
+                <%- include('components/item2', { shoe: shoe}) %>
             <% }); %> 
         </div>
     </div>
