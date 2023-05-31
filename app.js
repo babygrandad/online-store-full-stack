@@ -67,16 +67,16 @@ app.route('/products')
     });
 });
 
-app.route('/product')
+app.route('/products/:shoeID')
 .get((req,res)=>{
 
-    let requestedShoe = 18;
+    let requestedShoe = req.params.shoeID;
 
     const sql = `SELECT * from all_shoes WHERE product_id =`+ requestedShoe + ` ;`;
     connection.query(sql, (error, results, fields) => {
         if (error) throw error;
         
-        res.render('product',{pageTitle : "product" , shoe : results}); // send the results back to the client
+        res.render('product',{pageTitle : results[0].product_name , shoe : results}); // send the results back to the client
     });
 });
 
