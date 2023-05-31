@@ -10,3 +10,15 @@ function stepDown() {
         userQuantity.value = parseInt(userQuantity.value) - 1
     }
 }
+
+
+$('.card .color-option').on('click', function() {
+    var color = $(this).data('color');
+    var productId = $(this).closest('.card').data('product-id');
+    var imagePath = `/assets/images/shoes/${productId} - ${color}.png`;
+    $(this).closest('.card').find('.item-image').attr('src', imagePath);
+  });
+  
+  
+  
+  
