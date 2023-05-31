@@ -3,19 +3,19 @@
         <a href="" class="pointer-link">
             <img src="/assets/images/shoes/<%= shoe.product_id %> - <%= shoe.colors[0].color_name %>.png
             " alt="" class="g-image item-image">
-            <h5 class="pt-2"><%= shoe.product_name%></h5>
-            <span>Colours</span>
-            <ul class="available-options-wrapper color-wrapper">
-                <%shoe.colors.forEach((hex) => {%>
-                <li style="background-color: <%= hex.color_hex%>;"></li>
-                <% }); %>               
-            </ul>
-            <span>Sizes</span>
-            <ul class="available-options-wrapper sizes-wrapper">
-                <% shoe.sizes.forEach((size) => { %>
-                    <li><%= size %></li>
-                <% }); %>
-            </ul>
         </a>
+        <h5 class="pt-2"><%= shoe.product_name%></h5>
+        <span>Colours</span>
+        <ul class="available-options-wrapper color-wrapper">
+            <%shoe.colors.forEach((hex) => {%>
+            <li style="background-color: <%= hex.color_hex%>;"></li>
+            <% }); %>               
+        </ul>
+        <span>Sizes</span>
+        <ul class="available-options-wrapper sizes-wrapper">
+            <% shoe.sizes.forEach((size) => { %>
+                <li><%= size %></li>
+            <% }); %>
+        </ul>
     </div>
 </div>
