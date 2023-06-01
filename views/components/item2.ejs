@@ -8,7 +8,9 @@
         <span>Colours</span>
         <ul class="available-options-wrapper color-wrapper">
             <%shoe.colors.forEach((hex) => {%>
-            <li style="background-color: <%= hex.color_hex%>;"></li>
+            <li class="image-color-changer" data-image="/assets/images/shoes/<%= shoe.product_id %> - <%= hex.color_name%>.png"
+                 style="background-color: <%= hex.color_hex%>;">
+            </li>
             <% }); %>               
         </ul>
         <span>Sizes</span>
