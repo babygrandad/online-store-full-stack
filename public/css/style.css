@@ -136,6 +136,14 @@ input[type=number]::-webkit-outer-spin-button {
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
+.image-color-changer:hover{
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    transform: scale(1.1);
+    transition: 0.2s;
+    cursor: pointer;
+    user-select: none;
+}
+
 
 /* color only */
 /* these are just test with the colours. you might need to do this inline. */
