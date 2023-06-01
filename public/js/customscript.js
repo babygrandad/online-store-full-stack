@@ -11,14 +11,11 @@ function stepDown() {
     }
 }
 
-
-$('.card .color-option').on('click', function() {
-    var color = $(this).data('color');
-    var productId = $(this).closest('.card').data('product-id');
-    var imagePath = `/assets/images/shoes/${productId} - ${color}.png`;
-    $(this).closest('.card').find('.item-image').attr('src', imagePath);
-  });
-  
-  
-  
-  
+// Jquery code from here on out.
+$(".image-color-changer").on("click", function(){
+    var newImage = $(this).data('image');
+    var card = $(this).closest(".item-wrapper");
+    var cardImage = card.find(".item-image");
+    cardImage.attr("src", newImage);
+    console.log(newImage)
+});
