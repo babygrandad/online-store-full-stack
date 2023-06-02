@@ -9,7 +9,7 @@ const mysql = require('mysql2');
 const session = require('express-session');
 const path = require ('path');
 const $ = require ('jquery');
-const cron = require('node-cron');
+
 
 const app = express();
 
@@ -32,26 +32,11 @@ process.on('exit', () => {
 });
 
 
-
-// function selfPing() {
-//     // Make the HTTP request to ping your server
-//     // Replace '/ping' with the actual route on your server
-//     axios.get('http://localhost:3000/ping')
-//       .then(() => {
-//         console.log('Server pinged successfully.');
-//       })
-//       .catch((error) => {
-//         console.error('Error pinging server:', error);
-//       });
-// };
-// // Schedule the self-ping function to run every 10 minutes
-// cron.schedule('*/10 * * * *', selfPing);
-
-
 //temporary bootstrap points for offlne use
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
+
 
 app.route('/')
 .get((req,res)=>{
@@ -124,10 +109,38 @@ app.route('/test')
     });
 });
 
-app.listen(process.env.PORT || 3000, function() {
-    if (!process.env.PORT){
-        console.log("Server started on port 3000");
-    } else{
-        console.log("Server started on port " + process.env.PORT );
-    }
+
+//server stay alive (*&%*&$^&%$(&^$&^%(*&%$*^&%$^%$(*&%^%*&%*&^$(^^&%&^%(&%^%(*&%(&%^%$*^$*^$*^&$^&))))))))
+let intervalId = null;
+
+app.get('/ping', (req, res) => {
+  if (!intervalId) {
+    intervalId = setInterval(() => {
+      axios.get('https://online-store-oxhj.onrender.com/ping' ||'http://localhost:3000/ping') // Replace with your server address
+        .then(() => {
+          console.log('Server pinged successfully.');
+        })
+        .catch((error) => {
+          console.error('Error pinging server:', error);
+        });
+    }, 870000); // Set the interval to 14 minutes and 30 seconds (870000 milliseconds)
+  }
+
+  // Send a response to indicate that the interval is set or already active
+  res.json('Ping interval set or already active');
+});
+
+// Optional: Clear the interval when the server is shutting down
+// process.on('SIGINT', () => {
+//   if (intervalId) {
+//     clearInterval(intervalId);
+//     console.log('Ping interval cleared.');
+//   }
+//   process.exit();
+// });
+//server stay alive (*&%*&$^&%$(&^$&^%(*&%$*^&%$^%$(*&%^%*&%*&^$(^^&%&^%(&%^%(*&%(&%^%$*^$*^$*^&$^&))))))))
+
+
+app.listen(3000, function() {
+    console.log("Server started on port 3000");
 });
