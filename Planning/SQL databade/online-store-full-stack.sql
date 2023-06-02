@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 30, 2023 at 03:55 PM
+-- Generation Time: Jun 02, 2023 at 11:01 AM
 -- Server version: 8.0.33
 -- PHP Version: 7.4.3-4ubuntu2.18
 
@@ -107,7 +107,7 @@ INSERT INTO `colors` (`color_id`, `color_name`, `color_hex`, `group_color`) VALU
 (22, 'Apricot', '#E17F4D', 'Orange'),
 (23, 'Lilac', '#A871C5', 'Purple'),
 (24, 'Ink Blue', '#0F2444', 'Blue'),
-(25, 'Criomson', '#BF0404', 'Red'),
+(25, 'Crimson', '#BF0404', 'Red'),
 (26, 'Sky Blue', '#04B2D9', 'Blue'),
 (27, 'Espresso', '#40341E', 'Brown'),
 (28, 'Ever Green', '#30592A', 'Green'),
@@ -226,7 +226,7 @@ INSERT INTO `products` (`product_id`, `product_name`, `product_description`, `pr
 (8, 'Foam Glide', 'Experience the next level of comfort with our foam-infused flip-flops. Enjoy plush cushioning, lightweight support, and a flexible fit for ultimate relaxation and carefree adventures. Embrace foam luxury for your feet.', 180.00, 25, 0, 0),
 (9, 'LuxeSuede', 'Elevate your style with timeless sophistication. Crafted with premium suede, sleek silhouette, and a comfortable heel, it\'s the epitome of elegance and refinement. Step into effortless glamour and make a statement.', 1400.00, 36, 0, 0),
 (10, 'Radiant Gleam', 'Illuminate your every step with our shining leather heel. Imbued with elegance and a sleek silhouette, it captivates with its lustrous finish and adds a touch of glamour to any occasion. Shine bright with sophistication.', 500.00, 23, 0, 0),
-(11, 'Enchantment', ' A captivating fusion of style and allure. Crafted with luxurious suede, its reflective finish creates an enchanting play of light. Step into elegance that mesmerizes and leaves a lasting impression', 1500.00, 26, 1, 0),
+(11, 'Enchantment', 'A captivating fusion of style and allure. Crafted with luxurious suede, its reflective finish creates an enchanting play of light. Step into elegance that mesmerizes and leaves a lasting impression', 1500.00, 26, 1, 0),
 (12, 'Opulent Touch', 'Exude timeless sophistication with our suede masterpiece. Meticulously crafted with luxurious suede, impeccable detailing, and a refined silhouette, it embodies opulence and elegance. Make a statement that captures attention and admiration.\n\n\n\n\n', 800.00, 24, 0, 1),
 (13, 'Polished Aura', 'Radiate confidence with our patent leather masterpiece. Impeccably crafted with a glossy, light-reflecting finish, refined silhouette, and meticulous detailing, it illuminates your every step with elegance and charm. Step into a world of captivating sophistication.', 400.00, 42, 0, 0),
 (14, 'Empress', 'Redefine elegance with our patent leather masterpiece. Meticulously crafted with a thick sole and a small, masculine-inspired heel, it blends sophistication and comfort seamlessly. Step into regal confidence and make a lasting impression.     ', 500.00, 21, 0, 1),
@@ -326,7 +326,6 @@ INSERT INTO `product_colors` (`product_id`, `color_id`) VALUES
 (7, 31),
 (7, 32),
 (7, 29),
-(7, 12),
 (8, 8),
 (8, 26),
 (8, 33),
@@ -368,7 +367,8 @@ INSERT INTO `product_colors` (`product_id`, `color_id`) VALUES
 (16, 53),
 (16, 1),
 (18, 2),
-(9, 28);
+(9, 28),
+(7, 50);
 
 -- --------------------------------------------------------
 
