@@ -9,6 +9,7 @@ const mysql = require('mysql2');
 const session = require('express-session');
 const path = require ('path');
 const $ = require ('jquery');
+const cron = require('node-cron');
 
 const app = express();
 
@@ -24,12 +25,28 @@ const connection = mysql.createConnection({
     password: process.env.DB_PASS,
     database: process.env.DB_DATABASE
 });
-
-// Listen for the Node.js process to exit
+// Listen for the Node.js process to exit (related to SQL connection)
 process.on('exit', () => {
     // Close the MySQL connection
     connection.end();
 });
+
+
+
+// function selfPing() {
+//     // Make the HTTP request to ping your server
+//     // Replace '/ping' with the actual route on your server
+//     axios.get('http://localhost:3000/ping')
+//       .then(() => {
+//         console.log('Server pinged successfully.');
+//       })
+//       .catch((error) => {
+//         console.error('Error pinging server:', error);
+//       });
+// };
+// // Schedule the self-ping function to run every 10 minutes
+// cron.schedule('*/10 * * * *', selfPing);
+
 
 //temporary bootstrap points for offlne use
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
@@ -107,6 +124,10 @@ app.route('/test')
     });
 });
 
-app.listen(3000, function() {
-    console.log("Server started on port 3000");
+app.listen(process.env.PORT || 3000, function() {
+    if (!process.env.PORT){
+        console.log("Server started on port 3000");
+    } else{
+        console.log("Server started on port " + process.env.PORT );
+    }
 });
