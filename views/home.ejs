@@ -7,7 +7,9 @@
         <h1>Feautred Items</h1>
         <div class="row">
             <% results.forEach((shoe) => { %>
+               <% if(shoe.featured === 1){%>
                 <%- include('components/item2', { shoe: shoe}) %>
+               <%};%>
             <% }); %> 
         </div>
     </div>
@@ -21,7 +23,9 @@
         <div class="row_items p-3 gap-4">
             <!-- cards in here -->
             <% results.forEach((shoe) => { %>
-                <%- include('components/item2', { shoe: shoe}) %>
+                <% if(shoe.new === 1){%>
+                    <%- include('components/item2', { shoe: shoe}) %>
+                <%};%>
             <% }); %> 
         </div>
     </div>
