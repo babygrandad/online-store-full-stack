@@ -5,6 +5,7 @@
             " alt="" class="g-image item-image">
         </a>
         <h5 class="pt-2"><%= shoe.product_name%></h5>
+        <span class="fs-6 fw-bolder d-block pb-2">R<%= shoe.price%></span> 
         <span>Colours</span>
         <ul class="available-options-wrapper color-wrapper">
             <%shoe.colors.forEach((hex) => {%>

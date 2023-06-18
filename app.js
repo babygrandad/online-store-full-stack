@@ -9,6 +9,7 @@ const mysql = require('mysql2');
 const session = require('express-session');
 const path = require ('path');
 const $ = require ('jquery');
+const { log } = require('console');
 
 
 const app = express();
@@ -58,17 +59,35 @@ app.route('/about')
 .get((req,res)=>{
     res.render('about',{pageTitle : "about"})
 });
-
 app.route('/products')
 .get((req,res)=>{
 
-    const sql = `SELECT * from all_shoes ;`;
-    connection.query(sql, (error, results, fields) => {
+    const allShoesSql = `SELECT * FROM all_shoes;`;
+    const categorySql = `SELECT category_name FROM categories;`;
+    const groupColorSql = `SELECT * FROM group_colors;`;
+
+    connection.query(allShoesSql, (error, results, fields) => {
         if (error) throw error;
 
-        res.render('products',{pageTitle : "Shop", results : results}); // send the results back to the client
+        connection.query(categorySql, (categoryError, categoryResults, categoryFields) => {
+            if (categoryError) throw categoryError;
+
+            connection.query(groupColorSql, (groupColorError, groupColorResults, groupColorFields) => {
+                if (groupColorError) throw groupColorError;
+                
+                console.log(groupColorResults)
+
+                res.render('products', {
+                    pageTitle: "Shop",
+                    results: results,
+                    categoryResults: categoryResults,
+                    groupColorResults : groupColorResults
+                });
+            });
+        });
     });
 });
+
 
 app.route('/products/:shoeID')
 .get((req,res)=>{
