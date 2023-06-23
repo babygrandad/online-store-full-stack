@@ -9,7 +9,10 @@ const mysql = require('mysql2');
 const session = require('express-session');
 const path = require ('path');
 const $ = require ('jquery');
-const { log } = require('console');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 const app = express();
@@ -18,6 +21,18 @@ app.set('view engine', 'ejs');
 // app.use(session({ secret : process.env.SECRET }))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+//User session tracking initialize.
+app.use(session(
+    {
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 // SQL connection funtion
 const connection = mysql.createConnection({
@@ -59,6 +74,7 @@ app.route('/about')
 .get((req,res)=>{
     res.render('about',{pageTitle : "about"})
 });
+
 app.route('/products')
 .get((req,res)=>{
 
@@ -74,8 +90,6 @@ app.route('/products')
 
             connection.query(groupColorSql, (groupColorError, groupColorResults, groupColorFields) => {
                 if (groupColorError) throw groupColorError;
-                
-                console.log(groupColorResults)
 
                 res.render('products', {
                     pageTitle: "Shop",
@@ -87,7 +101,6 @@ app.route('/products')
         });
     });
 });
-
 
 app.route('/products/:shoeID')
 .get((req,res)=>{
@@ -110,7 +123,36 @@ app.route('/categories')
 app.route('/signup')
 .get((req,res)=>{
     res.render('signup',{pageTitle : "signup"})
-});
+})
+.post((req, res) => {
+    const { fname, lname, email, password, phone } = req.body;
+    
+    // Hash the password
+    bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error hashing password");
+        return;
+      }
+      
+      // Store the user in the database
+      connection.query(
+        'INSERT INTO customers (customer_first_name, customer_last_name, email, phone, password) VALUES (?,?,?,?,?)',
+        [fname, lname, email, phone, hashedPassword],
+        (error, results) => {
+          if (error) {
+            console.log(error);
+            res.status(500).send("Error registering user");
+            return;
+          }
+          
+          // Registration successful
+          res.status(200).send("User registered successfully");
+        }
+      );
+    });
+  });
+  
 
 app.route('/login')
 .get((req,res)=>{
@@ -128,36 +170,6 @@ app.route('/test')
     });
 });
 
-
-//server stay alive (*&%*&$^&%$(&^$&^%(*&%$*^&%$^%$(*&%^%*&%*&^$(^^&%&^%(&%^%(*&%(&%^%$*^$*^$*^&$^&))))))))
-let intervalId = null;
-
-app.get('/ping', (req, res) => {
-  if (!intervalId) {
-    intervalId = setInterval(() => {
-      axios.get('https://online-store-oxhj.onrender.com/ping' ||'http://localhost:3000/ping') // Replace with your server address
-        .then(() => {
-          console.log('Server pinged successfully.');
-        })
-        .catch((error) => {
-          console.error('Error pinging server:', error);
-        });
-    }, 870000); // Set the interval to 14 minutes and 30 seconds (870000 milliseconds)
-  }
-
-  // Send a response to indicate that the interval is set or already active
-  res.json('Ping interval set or already active');
-});
-
-// Optional: Clear the interval when the server is shutting down
-// process.on('SIGINT', () => {
-//   if (intervalId) {
-//     clearInterval(intervalId);
-//     console.log('Ping interval cleared.');
-//   }
-//   process.exit();
-// });
-//server stay alive (*&%*&$^&%$(&^$&^%(*&%$*^&%$^%$(*&%^%*&%*&^$(^^&%&^%(&%^%(*&%(&%^%$*^$*^$*^&$^&))))))))
 
 
 app.listen(3000, function() {

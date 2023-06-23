@@ -4,7 +4,7 @@
 <section name="signup">
     <div class="container midcenter eighty-page">
         <div class="row">
-            <form action="" method="post" class="needs-validation col-lg-6 m-auto" autocomplete="off" novalidate>
+            <form action="/signup" method="post" id="signupForm" class="needs-validation col-lg-6 m-auto" autocomplete="off" novalidate>
                 <h2>Sign-up</h2>
                 <div class="row">
                     <div class="col-lg-6">
@@ -12,7 +12,7 @@
                             <input type="text" class="form-control" name="fname" placeholder="First Name" required>
                             <label for="fname">First Name</label>
                             <div class="invalid-feedback">
-                              Please enter your name.
+                              Please enter your First name.
                             </div>
                         </div>
                     </div>
@@ -21,7 +21,16 @@
                             <input type="text" class="form-control" name="lname" placeholder="Last Name" required>
                             <label for="lname">Last Name</label>
                             <div class="invalid-feedback">
-                              Please enter your name.
+                              Please enter your Last name.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="phone" placeholder="Cell Number" required>
+                            <label for="phone">Cell Number</label>
+                            <div class="invalid-feedback">
+                               Incorrect cellphone format.
                             </div>
                         </div>
                     </div>
@@ -54,5 +63,5 @@
         </div>
     </div>
 </section>
-
+<script src="/js/registerValidation.js"></script>
 <%- include('partials/footer') %>
