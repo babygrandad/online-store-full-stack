@@ -76,6 +76,8 @@ app.route('/about')
     res.render('about',{pageTitle : "about"})
 });
 
+
+// Product pages routse
 app.route('/products')
 .get((req,res)=>{
 
@@ -121,6 +123,8 @@ app.route('/categories')
     res.render('categories',{pageTitle : "categories"})
 });
 
+
+//sign up routes
 app.route('/signup')
 .get((req,res)=>{
     res.render('signup',{pageTitle : "signup"})
@@ -152,9 +156,10 @@ app.route('/signup')
         }
       );
     });
-  });
-  
+});
 
+
+//Login Routes
 app.route('/login')
 .get((req,res)=>{
     res.render('login',{pageTitle : "login"})
@@ -198,7 +203,20 @@ app.route('/login')
       );
 });
 
-      
+
+// Cart routse. 
+app.route('/cart')
+.get((req,res)=>{
+});
+
+app.route('/cart/item')
+.put((req,res)=>{
+
+})
+
+.delete((req,res)=>{
+
+});
 
 
 app.route('/test')
