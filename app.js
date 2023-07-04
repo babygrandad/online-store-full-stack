@@ -20,6 +20,7 @@ const app = express();
 app.set('view engine', 'ejs');
 // app.use(session({ secret : process.env.SECRET }))
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static("public"));
 //User session tracking initialize.
 app.use(session(
@@ -157,7 +158,48 @@ app.route('/signup')
 app.route('/login')
 .get((req,res)=>{
     res.render('login',{pageTitle : "login"})
+})
+.post((req,res)=>{
+    const { email, password } = req.body;
+    connection.query(
+        'SELECT * FROM customers WHERE email = ?',
+        [email],
+        (error, results) => {
+          if (error) {
+            console.log(error);
+            res.status(500).send("Error retrieving user");
+            return;
+          }
+    
+          if (results.length === 0) {
+            res.status(401).send("Invalid email or password");
+            return;
+          }
+    
+          const user = results[0];
+    
+          // Compare the provided password with the hashed password stored in the database
+          bcrypt.compare(password, user.password, (err, passwordMatch) => {
+            if (err) {
+              console.log(err);
+              res.status(500).send("Error comparing passwords");
+              return;
+            }
+    
+            if (!passwordMatch) {
+              res.status(401).send("Invalid email or password");
+              return;
+            }
+    
+            // Login successful
+            res.status(200).send("Login successful");
+          });
+        }
+      );
 });
+
+      
+
 
 app.route('/test')
 .get((req,res)=>{
