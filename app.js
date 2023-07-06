@@ -22,6 +22,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+
 //User session tracking initialize.
 app.use(session(
     {
@@ -49,7 +50,7 @@ process.on('exit', () => {
 });
 
 
-//temporary bootstrap points for offlne use
+//Bootstrap pointers for offline use.
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
@@ -203,20 +204,6 @@ app.route('/login')
       );
 });
 
-
-// Cart routse. 
-app.route('/cart')
-.get((req,res)=>{
-});
-
-app.route('/cart/item')
-.put((req,res)=>{
-
-})
-
-.delete((req,res)=>{
-
-});
 
 
 app.route('/test')
