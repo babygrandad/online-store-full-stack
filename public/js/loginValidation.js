@@ -24,7 +24,7 @@ $("#loginForm").submit(function(event) {
     .then(response => {
         if (response.status === 200) {
         // Login successful
-        alert("Login successful");
+        window.location.href = "/products";
         } else {
         // Handle other non-200 status codes
         alert("An error occurred during login");
@@ -34,6 +34,8 @@ $("#loginForm").submit(function(event) {
     if (error.response) {
         // The request was made and the server responded with an error status code
         if (error.response.status === 401) {
+        console.log(error.response.status);
+        console.log(error.response.data);
         incorectDetails(emailField);
         $('#validationStatus').removeClass('d-none')
         } else {
