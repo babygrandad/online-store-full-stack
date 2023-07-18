@@ -7,6 +7,7 @@ const axios =  require("axios");
 const _ = require('lodash');
 const mysql = require('mysql2');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const path = require ('path');
 const $ = require ('jquery');
 const passport = require('passport');
@@ -23,14 +24,69 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
+// Configure passport
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+    },
+    (email, password, done) => {
+      connection.query(
+        'SELECT * FROM customers WHERE email = ?',
+        [email],
+        (error, results) => {
+          if (error) {
+            console.log(error);
+            return done(error);
+          }
+  
+          if (results.length === 0) {
+            return done(null, false, { message: 'Invalid email or password' });
+          }
+  
+          const user = results[0];
+  
+          // Compare the provided password with the hashed password stored in the database
+          bcrypt.compare(password, user.password, (err, passwordMatch) => {
+            if (err) {
+              console.log(err);
+              return done(err);
+            }
+  
+            if (!passwordMatch) {
+              return done(null, false, { message: 'Invalid email or password' });
+            }
+  
+            // Login successful
+            return done(null, user);
+          });
+        }
+      );
+    }
+  )
+);
+
 //User session tracking initialize.
 app.use(session(
     {
       secret: process.env.SESSION_SECRET,
       resave: false,
-      saveUninitialized: false
+      saveUninitialized: false,
+      store: new MySQLStore({
+        // Configure your session store options
+        // For example, provide your MySQL database connection details
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_DATABASE
+      }),
     })
 );
+
+
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -165,44 +221,12 @@ app.route('/login')
 .get((req,res)=>{
     res.render('login',{pageTitle : "login"})
 })
-.post((req,res)=>{
-  const { email, password } = req.body;
-  connection.query(
-      'SELECT * FROM customers WHERE email = ?',
-      [email],
-      (error, results) => {
-        if (error) {
-          console.log(error);
-          res.status(500).send("Error retrieving user");
-          return;
-        }
-  
-        if (results.length === 0) {
-          res.status(401).send("Invalid email or password");
-          return;
-        }
-  
-        const user = results[0];
-  
-        // Compare the provided password with the hashed password stored in the database
-        bcrypt.compare(password, user.password, (err, passwordMatch) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send("Error comparing passwords");
-            return;
-          }
-  
-          if (!passwordMatch) {
-            res.status(401).send("Invalid email or password");
-            return;
-          }
-  
-          // Login successful
-          res.status(200).send("Login Successful!"); // Redirect to products page - handled by serverside js
-        });
-      }
-    );
-});
+.post(
+  passport.authenticate('local', {
+    successRedirect: '/products', // Redirect to the products page upon successful login
+    failureRedirect: '/login', // Redirect back to the login page if authentication fails
+  })
+);
 
 
 
