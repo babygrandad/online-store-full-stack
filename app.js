@@ -162,6 +162,11 @@ app.route('/categories')
     res.render('categories', { pageTitle: "categories" })
   });
 
+  app.route('/cart')
+  .get((req, res) => {
+    res.render('cart', { pageTitle: "cart" })
+  });
+
 
 //sign up routes
 app.route('/signup')
@@ -213,7 +218,6 @@ app.route('/login')
       // If authentication fails, return the error message
       console.log(info)
       return res.status(401).json({ message: info.message });
-      
     }
 
     // If authentication succeeds, log the user in using req.login()
