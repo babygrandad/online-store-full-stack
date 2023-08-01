@@ -67,7 +67,8 @@
 /* ---------- Cart-page ---------- */
 
 .cart-item{
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 12px;
+    background-color: rgb(245, 245, 245);
 }
 
 /* ---------- Products-page (Plural) ---------- */
