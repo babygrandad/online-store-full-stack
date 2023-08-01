@@ -64,6 +64,12 @@
 }
 
 
+/* ---------- Cart-page ---------- */
+
+.cart-item{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
 /* ---------- Products-page (Plural) ---------- */
 .colorCheckWrapper{
      display: flex;
@@ -220,3 +226,4 @@ input[type=number]::-webkit-outer-spin-button {
 .sorting-buttons{
     min-width: 120px;
 }
+
