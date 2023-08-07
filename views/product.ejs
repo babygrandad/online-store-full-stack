@@ -26,41 +26,42 @@
                 <h5>R <%= shoe[0].price%></h5>
                 <hr>
                 <p><%= shoe[0].product_description%></p>
-                <form id="purchase-form" action="" method="post">
+                <form id="purchase-form" method="post" class="needs-validation" novalidate>
                     <div class="form-floating mb-4">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                          <option selected>Choose your colour</option>
+                        <select class="form-select" id="colorSelect" name="color" aria-label="Floating label select example" required>
+                          <option selected disabled>Choose your colour</option>
                           <% shoe[0].colors.forEach((color)=> { %>
                             <%- include('components/indivisual-product-page/colour-option', {color : color.color_name}) %>
                           <% }); %>
                         </select>
-                        <label for="floatingSelect">Colours</label>
+                        <label for="colorSelect">Colours</label>
                       </div>
 
                       <div class="form-floating mb-4">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                          <option selected>Choose your Size</option>
+                        <select class="form-select" id="sizeSelect" name="size" aria-label="Floating label select example" required>
+                          <option selected disabled>Choose your Size</option>
                           <% shoe[0].sizes.forEach((size)=> { %>
                             <%- include('components/indivisual-product-page/size-option', {size : size}) %>
                           <% }); %>
                           
-                          
                         </select>
-                        <label for="floatingSelect">Sizes</label>
+                        <label for="sizeSelect">Sizes</label>
                       </div>
 
                       <div class="input-group mb-4" role="group" aria-label="Basic example">
-                        <button type="button" id="quantity-Minus" class="btn btn-outline-secondary" onmousedown="stepDown()">
+                        <button type="button" id="quantity-Minus" class="btn btn-outline-secondary">
                             <i class="fa-sharp fa-solid fa-minus"></i>
                         </button>
                         <div class="form-floating">
-                        <input type="number" class="form-control" id="user-quantity" min="1" value="1" placeholder="Quantity">
+                        <input type="number" class="form-control" name="quantity" id="user-quantity" min="1" max="5" value="1" placeholder="Quantity">
                         <label for="user-quantity">Quantity</label>
                         </div>
-                        <button type="button" id="quantity-Plus" class="btn btn-outline-secondary" onmousedown="stepUp()">
+                        <button type="button" id="quantity-Plus" class="btn btn-outline-secondary">
                             <i class="fa-sharp fa-solid fa-plus"></i>
                         </button>
                       </div>
+
+                      <input type="hidden" name="productID" value="<%=shoe[0].product_id %>">
 
                       <div class="d-grid mb-4">
                         <button class="btn btn-primary btn-lg">Add to cart <i class="fa-solid fa-cart-plus"></i></button>
@@ -71,4 +72,5 @@
         </div>
     </div>
 </section>
+<script src="/js/addToCart.js"></script>
 <%- include('partials/footer') %>

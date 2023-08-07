@@ -1,0 +1,38 @@
+<!-- <%- include('partials/header') %>
+
+<div class="row">
+    <div class="div" style="min-height: 20vh; background-color: chartreuse;"></div>
+    <div class="div" style="min-height: 60vh; background-color: brown;">
+    <h1><%= pageTitle %></h1>
+    </div>
+    <div class="div" style="min-height: 20vh; background-color: chartreuse;"></div>
+</div>
+
+
+</body> -->
+
+
+When user adds item to cart check if user is logged in{
+    if(yes){
+        check if cart item for user already exist
+        if(yes){
+            update/add item to user's cart item in cookie
+            return
+        }
+        if(no){
+            create cart item and add item to user's cart item in cookie
+            return
+        }
+    }
+    if(no){
+        check if cart item exist in local-storage
+        if(yes){
+            update/add item to cart in local-storage
+            return
+        }
+        if(no){
+            create cart item in local-storage and add item cart
+            return
+        }
+    }
+} 

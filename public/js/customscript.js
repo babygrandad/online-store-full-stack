@@ -1,16 +1,39 @@
-const userQuantity = document.getElementById('user-quantity');
-// functions that control the incease and decrease of the
-// quantity the user wants to buy
-function stepUp() {
-        userQuantity.value = parseInt(userQuantity.value) + 1
-}
-function stepDown() {
-    if (userQuantity.value > 1) {
-        userQuantity.value = parseInt(userQuantity.value) - 1
-    }
-}
 
-//---- Jquery code from here on out. ---- \\
+//---- Jquery code ---- \\
+
+// code to control the increase and decrease of quanty 
+$(document).ready(function() {
+    const userQuantity = $('#user-quantity');
+
+    // Function to increase the quantity
+    function stepUp() {
+        if (userQuantity.val() < 5) {
+            userQuantity.val(parseInt(userQuantity.val()) + 1);
+        }
+    }
+
+    // Function to decrease the quantity
+    function stepDown() {
+        if (userQuantity.val() > 1) {
+            userQuantity.val(parseInt(userQuantity.val()) - 1);
+        }
+    }
+
+    // Event listeners for increase and decrease buttons
+    $('#quantity-Plus').on('click', stepUp);
+    $('#quantity-Minus').on('click', stepDown);
+
+    // Event listener for input constraint
+    userQuantity.on('keyup', function() {
+        if (userQuantity.val() > 5) {
+            userQuantity.val(5);
+        }
+        if (userQuantity.val() < 1) {
+            userQuantity.val(1);
+        }
+    });
+});
+  
 
 // code to change the colors on the shop page.
 $('.image-color-changer').on('click', function(){

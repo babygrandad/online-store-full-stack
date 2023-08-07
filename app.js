@@ -2,6 +2,7 @@
 require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const ejs = require("ejs");
 const axios = require("axios");
 const _ = require('lodash');
@@ -22,6 +23,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+app.use(cookieParser());
 //User session tracking initialize.
 app.use(session(
   {
@@ -162,10 +164,39 @@ app.route('/categories')
     res.render('categories', { pageTitle: "categories" })
   });
 
-  app.route('/cart')
+app.route('/cart')
   .get((req, res) => {
     res.render('cart', { pageTitle: "cart" })
   });
+
+  app.route('/cart/add').post((req, res) =>{
+    const cart = req.cookies.cart || {}
+    const newItem = req.body
+    console.log(newItem)
+    res.status(200).send("information sent")
+
+  });
+
+  app.route('/cart/remove').post((req, res) =>{
+   
+    //get and store the object coming from user in a variable
+
+    //get the existing cart from user
+      /*if cart exists{
+        push the new item into cart
+        send the updated cookie back to user
+      }
+      else{
+        create the cart
+        push the new item into cart
+        send the updated cookie back to user
+      }
+      
+      */
+
+
+  });
+  
 
 
 //sign up routes
@@ -229,16 +260,17 @@ app.route('/login')
       return res.status(200).json({ message: 'Login successful', user });
     });
   })(req, res, next);
-  })
+  });
 
-  app.route('/test')
+//Testing Routes
+app.route('/test')
   .get((req, res) => {
     if (req.isAuthenticated()){
-      res.send('enjoy Luxury');
+      res.render('test', { pageTitle: "Successful Login" })
     }else{
       res.redirect('/login');
     }
-  })
+  });
 
 
 app.listen(3000, function () {
