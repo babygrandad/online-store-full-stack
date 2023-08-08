@@ -3,7 +3,6 @@
 
 // code to control the increase and decrease of quanty 
 $(document).ready(function() {
-    const userQuantity = $('#user-quantity');
 
     // Function to increase the quantity
     function stepUp() {
@@ -24,6 +23,7 @@ $(document).ready(function() {
     $('#quantity-Minus').on('click', stepDown);
 
     // Event listener for input constraint
+    const userQuantity = $('#user-quantity');
     userQuantity.on('keyup', function() {
         if (userQuantity.val() > 5) {
             userQuantity.val(5);

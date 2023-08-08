@@ -63,10 +63,21 @@
 
                       <input type="hidden" name="productID" value="<%=shoe[0].product_id %>">
 
+                      <!-- system failure message -->
+                      <div id="fail-alert" class="alert alert-danger d-none" role="alert">
+                        ☹ There was a problem adding items to cart. Please try again.
+                      </div>
+
+                      <!-- button to submit item to cart -->
                       <div class="d-grid mb-4">
                         <button class="btn btn-primary btn-lg">Add to cart <i class="fa-solid fa-cart-plus"></i></button>
                       </div>
 
+                      <!-- system success message  -->
+                      <div id="success-alert" class="alert alert-success d-none" role="alert">
+                        Items added to cart
+                      </div>
+                      
                 </form>
             </div>
         </div>
