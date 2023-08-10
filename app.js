@@ -11,6 +11,7 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
 const $ = require('jquery');
+const { v4: uuidv4 } = require('uuid');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
@@ -170,10 +171,8 @@ app.route('/cart')
   });
 
   app.route('/cart/add').post((req, res) =>{
+
     const cart = req.cookies.cart || {}
-    const newItem = req.body
-    console.log(newItem)
-    res.status(200).send("information sent")
 
   });
 
