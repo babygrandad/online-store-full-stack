@@ -173,7 +173,13 @@ app.route('/cart')
   app.route('/cart/add').post((req, res) =>{
 
     const cart = req.cookies.cart || {}
-
+    const newItem = req.body;
+    cart.cartId = uuidv4();
+    cart.timestamp = new Date().getTime();
+    userID = 'guest';
+    cart.cartItems = [newItem]
+    res.status(200).send("information sent")
+    console.log(cart)
   });
 
   app.route('/cart/remove').post((req, res) =>{
