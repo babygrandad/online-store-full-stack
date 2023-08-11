@@ -171,15 +171,29 @@ app.route('/cart')
   });
 
   app.route('/cart/add').post((req, res) =>{
-
-    const cart = req.cookies.cart || {}
     const newItem = req.body;
-    cart.cartId = uuidv4();
-    cart.timestamp = new Date().getTime();
-    userID = 'guest';
-    cart.cartItems = [newItem]
-    res.status(200).send("information sent")
+    var cart = req.cookies.cart || {}
+
+    if(cart === req.cookies.cart){
+      //take cart.cartitems and put them in an array
+      var itemsList =[]
+      cart.cartItems.forEach(item => {
+        itemsList.push(item)
+      });
+      //push new item to array
+      itemsList.push(newItem);
+      //store moded array as cart.cartitems
+      cart.cartItems = itemsList;
+    }
+    else{
+      cart.cartId = uuidv4();
+      cart.userID = "guest: " + uuidv4();
+      cart.timestamp = new Date().getTime();
+      cart.cartItems = [newItem];
+    }
     console.log(cart)
+    res.cookie('cart', cart, { maxAge: 3600000 })
+    .status(200).send("Everything Fine I guess???")
   });
 
   app.route('/cart/remove').post((req, res) =>{
