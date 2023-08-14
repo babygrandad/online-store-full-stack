@@ -16,7 +16,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-
+const cartLogic = require('./modules/cartLogic');
 
 const app = express();
 
@@ -165,6 +165,8 @@ app.route('/categories')
     res.render('categories', { pageTitle: "categories" })
   });
 
+
+  //Cart routes 
 app.route('/cart')
   .get((req, res) => {
     res.render('cart', { pageTitle: "cart" })
