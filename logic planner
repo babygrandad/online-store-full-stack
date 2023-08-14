@@ -15,3 +15,48 @@ CREATE TABLE CartItems (
   FOREIGN KEY (cartID) REFERENCES carts(cartID),
   FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
+
+/*
+
+# Scenario 1: User is not logged in
+if user is not logged in:
+    # Create a cart for the guest user (if not already created)
+    if guest cart does not exist:
+        create a new cart for the guest user
+    else:
+        retrieve the guest cart
+
+    # Allow user to add, remove, or view items in the guest cart
+
+# Scenario 2: User is logged in
+if user is logged in:
+    # Retrieve the user's cart
+    retrieve the user's cart based on their userID
+    
+    # Allow user to add, remove, or view items in their cart
+    if user adds or removes items:
+        update the cart items accordingly in the CartItems table
+
+# Scenario 3: User had a cart as a guest then logs in
+if user was a guest and now logs in:
+    # Merge the guest cart with the user's cart
+    retrieve the guest cart and user's cart
+    for each item in guest cart:
+        if the same item exists in user's cart:
+            update the quantity in the user's cart
+        else:
+            add the item to the user's cart
+    delete the guest cart
+
+# Scenario 4: User logs out
+if user logs out:
+    # Clear the user's cart (or keep it for future reference)
+    mark the user's cart as "inactive" or delete it
+
+# Displaying cart contents and checkout logic would come here
+# This would involve querying the CartItems table to fetch cart details
+
+# Proceed to checkout logic would involve processing the cart items and creating orders
+
+
+*/
