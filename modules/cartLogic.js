@@ -1,5 +1,5 @@
 // modules/cartLogic.js
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 
 function addItemToCart(cart, newItem) {
     const itemsList = cart.cartItems ? [...cart.cartItems] : [];
@@ -8,10 +8,10 @@ function addItemToCart(cart, newItem) {
 }
 
 function handleCart(request, response) {
-    const newItem = req.body;
-    let cart = req.cookies.cart || {};
+    const newItem = request.body;
+    let cart = request.cookies.cart || {};
 
-    if (cart === req.cookies.cart) {
+    if (cart === request.cookies.cart) {
         addItemToCart(cart, newItem);
     } else {
         cart = {
@@ -23,7 +23,7 @@ function handleCart(request, response) {
     }
 
     console.log(cart);
-    res.cookie('cart', cart, { maxAge: 3600000 })
+    response.cookie('cart', cart, { maxAge: 3600000 })
         .status(200).send("Item added to cart.");
 }
 
