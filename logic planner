@@ -1,14 +1,17 @@
-loggedOut(){
-}
+CREATE TABLE carts (
+  cartID PRIMARY KEY,
+  userID VARCHAR,
+  timestamp BIGINT,
+  FOREIGN KEY (userID) REFERENCES customers(email)
+);
 
-loggingIn(){
-
-}
-
-loggedI(){
-
-}
-
-loggingOut(){
-
-}
+CREATE TABLE CartItems (
+  entryID bigint PRIMARY KEY,
+  cartID VARCHAR,
+  product_id INT,
+  color VARCHAR(50),
+  size VARCHAR(10),
+  quantity INT,
+  FOREIGN KEY (cartID) REFERENCES carts(cartID),
+  FOREIGN KEY (product_id) REFERENCES products(product_id)
+);

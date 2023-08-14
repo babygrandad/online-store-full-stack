@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 17, 2023 at 04:45 PM
--- Server version: 8.0.33
--- PHP Version: 7.4.3-4ubuntu2.18
+-- Generation Time: Aug 14, 2023 at 01:31 PM
+-- Server version: 8.1.0
+-- PHP Version: 7.4.3-4ubuntu2.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,6 +44,33 @@ CREATE TABLE `all_shoes` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `carts`
+--
+
+CREATE TABLE `carts` (
+  `cartID` varchar(255) NOT NULL,
+  `userID` varchar(255) DEFAULT NULL,
+  `timestamp` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart_items`
+--
+
+CREATE TABLE `cart_items` (
+  `entryID` bigint NOT NULL,
+  `cartID` varchar(255) DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `color` varchar(50) DEFAULT NULL,
+  `size` varchar(10) DEFAULT NULL,
+  `quantity` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `categories`
 --
 
@@ -64,7 +91,7 @@ INSERT INTO `categories` (`category_id`, `category_name`) VALUES
 (5, 'Sandals'),
 (6, 'Crocs'),
 (7, 'Trainers'),
-(8, 'Flip Flops');
+(8, 'Flip-Flops');
 
 -- --------------------------------------------------------
 
@@ -146,6 +173,15 @@ CREATE TABLE `customers` (
   `phone` varchar(215) DEFAULT NULL,
   `password` varchar(260) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`customer_id`, `customer_first_name`, `customer_last_name`, `email`, `phone`, `password`) VALUES
+(1, 'Ricky', 'Chavez', 'me@123456.com', '0721234567', '$2b$10$0IrPrwXYQTtFukCMRNzg8.VOi1YxQmZUxcHgEKzaFn7rpMzfZ7Kja'),
+(2, 'Melik', 'Ratazschlovska', 'melik@password.com', '0123456789', '$2b$10$GmtELj81xRTrFWlT9CQRS.WEFdDd2tc6UWVrGqKCpvqVqlUDgPGK6'),
+(3, 'Anatov', 'Brazashlava', 'anatov@654321.com', '071456123', '$2b$10$kBbez1oK2PsOfceqL8Bzi.FhNKq5GLZTbGHj9/vLKtZHHTa86st0y');
 
 -- --------------------------------------------------------
 
@@ -506,6 +542,25 @@ INSERT INTO `product_sizes` (`product_id`, `size_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int UNSIGNED NOT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
+('u61C-V3qGsyDv5o7cnWYaj3BhFX-6Iwj', 1689532301, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"}}');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sizes`
 --
 
@@ -565,6 +620,21 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `
 --
 
 --
+-- Indexes for table `carts`
+--
+ALTER TABLE `carts`
+  ADD PRIMARY KEY (`cartID`),
+  ADD KEY `userID` (`userID`);
+
+--
+-- Indexes for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD PRIMARY KEY (`entryID`),
+  ADD KEY `cartID` (`cartID`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
@@ -583,7 +653,8 @@ ALTER TABLE `colors`
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
-  ADD PRIMARY KEY (`customer_id`);
+  ADD PRIMARY KEY (`customer_id`),
+  ADD KEY `idx_email` (`email`);
 
 --
 -- Indexes for table `genders`
@@ -602,6 +673,12 @@ ALTER TABLE `group_colors`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`product_id`);
+
+--
+-- Indexes for table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`session_id`);
 
 --
 -- Indexes for table `sizes`
@@ -630,7 +707,7 @@ ALTER TABLE `colors`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `genders`
@@ -653,6 +730,19 @@ ALTER TABLE `sizes`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `carts`
+--
+ALTER TABLE `carts`
+  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `customers` (`email`);
+
+--
+-- Constraints for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cartID`) REFERENCES `carts` (`cartID`),
+  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
 
 --
 -- Constraints for table `colors`
