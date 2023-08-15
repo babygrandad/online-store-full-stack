@@ -1,21 +1,3 @@
-CREATE TABLE carts (
-  cartID PRIMARY KEY,
-  userID VARCHAR,
-  timestamp BIGINT,
-  FOREIGN KEY (userID) REFERENCES customers(email)
-);
-
-CREATE TABLE CartItems (
-  entryID bigint PRIMARY KEY,
-  cartID VARCHAR,
-  product_id INT,
-  color VARCHAR(50),
-  size VARCHAR(10),
-  quantity INT,
-  FOREIGN KEY (cartID) REFERENCES carts(cartID),
-  FOREIGN KEY (product_id) REFERENCES products(product_id)
-);
-
 /*
 
 # Scenario 1: User is not logged in
@@ -60,3 +42,36 @@ if user logs out:
 
 
 */
+
+
+
+connection.query(
+  'INSERT INTO Carts (cart_id, user_id, timestamp) VALUES (?,?,?)',
+  [cartID, userID, timestamp],
+    (error, results) => {
+  if(error) {
+    console.log(error);
+    res.status(500).send("Error storing cart.");
+    return;
+  }
+
+    // Registration successful
+    res.status(200).send("Cart added to Database");
+}
+)
+
+connection.query(
+  'INSERT INTO cart_items (entry_id, cart_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)',
+  [newItem.color, newItem.size, newItem.quantity, newItem.productID, newItem.entryID]
+    (error, results) => {
+  if(error) {
+    console.log(error);
+    res.status(500).send("Error storing item.");    
+
+    return;
+  }
+
+    // Registration successful
+    res.status(200).send("Cart item added to Database");
+}
+)
