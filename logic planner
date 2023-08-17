@@ -75,3 +75,42 @@ connection.query(
     res.status(200).send("Cart item added to Database");
 }
 )
+
+
+///////////////
+
+let newItem = req.body;
+    const { color, size, quantity, productID, entryID } = newItem;
+
+    if (req.cookies.cart) {
+      const cart = req.cookies.cart;
+      const userID = cart.userID;
+      const cartID = cart.cartID;
+      cart.updated = new Date().getTime();
+      newItem.cartID = cartID
+      cart.cartItems.push(newItem); // Push the newItem to the existing cartItems array
+      console.log(cart);
+      res.cookie('cart', cart, { maxAge: 3600000 }).status(200).send('success');
+    } else {
+      let cart = {};
+      let cartItemsList = [];
+      cart.cartID = uuidv4();
+      cart.userID = req.isAuthenticated() ? req.user.Email : "Guest : " + uuidv4();
+      cart.created = new Date().getTime();
+      cart.updated = new Date().getTime();
+      newItem.cartID = cart.cartID;
+      cartItemsList.push(newItem); // Push the newItem to the cartItemsList array
+      cart.cartItems = cartItemsList; // Assign the array to cart.cartItems
+      console.log(cart);
+      res.cookie('cart', cart, { maxAge: 3600000 }).status(200).send('success');
+    }
+
+///////////////
+
+
+
+if(req.isAuthenticated()){
+  //logic t go in here
+}else{
+  // logic to go in here
+}
