@@ -172,30 +172,87 @@ app.route('/cart')
     res.render('cart', { pageTitle: "cart" })
   });
 
-  app.route('/cart/add').post((req, res) =>{
+app.route('/cart/add').post((req, res) => {
 
-    cartLogic.handleCart(req, res); //remebr you imported this logic from the modules folder
-  });
+  //cartLogic.handleCart(req, res); //remebr you imported this logic from the modules folder
+  function createNewCartForUser(userID) {
+    const timestamp = new Date().getTime();
+    return {
+      cartID: uuidv4(),
+      userID,
+      created: timestamp,
+      updated: timestamp
+    };
+  }
 
-  app.route('/cart/remove').post((req, res) =>{
-   
-    //get and store the object coming from user in a variable
-
-    //get the existing cart from user
-      /*if cart exists{
-        push the new item into cart
-        send the updated cookie back to user
-      }
-      else{
-        create the cart
-        push the new item into cart
-        send the updated cookie back to user
-      }
-      
-      */
+  function createNewCartForGuest() {
+    const timestamp = new Date().getTime();
+    return {
+      cartID: uuidv4(),
+      userID: `Guest : ${uuidv4()}`,
+      created: timestamp,
+      updated: timestamp
+    };
+  }
 
 
-  });
+  const isAuthenticated = req.isAuthenticated();
+  let cart = req.cookies.cart || {};
+  const userID = cart.userID || '';
+
+  let responseMessage = '';
+
+  if (isAuthenticated) {
+    const isNewCart = !cart.cartID;
+    const isGuestCart = userID.startsWith('Guest :');
+    const isUserCart = userID === req.user.email;
+
+    if (isNewCart || (isGuestCart && isUserCart)) {
+      cart.userID = req.user.email;
+    } else if (isGuestCart && !isUserCart) {
+      cart = createNewCartForUser(req.user.email);
+    }
+
+    cart.updated = new Date().getTime();
+    responseMessage = `Cart saved for ${cart.userID}`;
+  } else {
+    const isNewCart = !cart.cartID;
+    const isGuestCart = userID.startsWith('Guest :');
+
+    if (isNewCart || isGuestCart) {
+      cart.updated = new Date().getTime();
+      responseMessage = 'Cart saved for Guest';
+    } else {
+      cart = createNewCartForGuest();
+      responseMessage = `Cart saved for ${cart.userID}`;
+    }
+  }
+
+  cart.created = cart.created || new Date().getTime();
+
+  res.cookie('cart', cart, { maxAge: 3600000 })
+    .status(200).send(responseMessage);
+});
+
+app.route('/cart/remove').post((req, res) => {
+
+  //get and store the object coming from user in a variable
+
+  //get the existing cart from user
+  /*if cart exists{
+    push the new item into cart
+    send the updated cookie back to user
+  }
+  else{
+    create the cart
+    push the new item into cart
+    send the updated cookie back to user
+  }
+  
+  */
+
+
+});
   
 
 

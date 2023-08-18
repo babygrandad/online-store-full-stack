@@ -1,11 +1,11 @@
-if(isAuthenticated()){
+if (req.isAuthenticated()) {
     //scinario 1. User Makes a Cart as Guest and Then Logs In:
-    if(req.cookies.cart){
+    if (req.cookies.cart) {
         const cart = req.cookies.cart;
         const userID = cart.userID;
 
 
-    //check who the cart belongs to.
+        //check who the cart belongs to.
         //if cart belongs to guest
         if (userID.startsWith('Guest :')) {
             cart.userID = req.user.email
@@ -14,25 +14,27 @@ if(isAuthenticated()){
 
 
 
-            //send response
-            res.cookies('cart', cart, { maxAge: 3600000 })
+            console.log(cart);
+            // send response
+            res.cookie('cart', cart, { maxAge: 3600000 })
                 .status(200).send('Cart saved for ' + cart.userID)
         }
 
         //if cart belongs to this user 
-        else if (userID === req.user.email){
+        else if (userID === req.user.email) {
             cart.updated = new Date().getTime();
             //rest of code
 
 
 
-            //send response
-            res.cookies('cart', cart, { maxAge: 3600000 })
+            console.log(cart);
+            // send response
+            res.cookie('cart', cart, { maxAge: 3600000 })
                 .status(200).send('Cart saved for ' + cart.userID)
         }
 
         //if cart belongs to another user
-        else{
+        else {
             let timestamp = new Date().getTime()
             let cart = {}
             cart.cartID = uuidv4();
@@ -43,11 +45,12 @@ if(isAuthenticated()){
 
 
 
-            //send response
-            res.cookies('cart', cart, {maxAge: 3600000})
-                .status(200).send('Cart saved for '+ cart.userID)
+            console.log(cart);
+            // send response
+            res.cookie('cart', cart, { maxAge: 3600000 })
+                .status(200).send('Cart saved for ' + cart.userID)
         }
-    }else{
+    } else {
         // Scinario 2. Logged-In User Creates a Cart:
         let timestamp = new Date().getTime()
         let cart = {}
@@ -55,46 +58,48 @@ if(isAuthenticated()){
         cart.userID = req.user.email;
         cart.created = timestamp;
         cart.updated = timestamp;
-        
-        res.cookies('cart', cart, {maxAge: 3600000})
-        .status(200).send('Cart saved for Guest Shopper')
+
+        res.cookie('cart', cart, { maxAge: 3600000 })
+            .status(200).send('Cart saved for Guest Shopper')
     }
-}else{
-    if(req.cookies.cart){
-    const cart = req.cookies.cart;
-    const userID = cart.userID;
-    //Check who the cart belongs to
+} else {
+    if (req.cookies.cart) {
+        const cart = req.cookies.cart;
+        const userID = cart.userID;
+        //Check who the cart belongs to
 
         //if cart belongs belongs to a guest
-        if(userID.startsWith('Guest :')){
+        if (userID.startsWith('Guest :')) {
             cart.updated = new Date().getTime();
             //rest of code
 
 
-
-            //send response
-            res.cookies('cart', cart, { maxAge: 3600000 })
+            console.log(cart);
+            console.log(cart);
+            // send response
+            res.cookie('cart', cart, { maxAge: 3600000 })
                 .status(200).send('Cart saved for Guest')
         }
 
         //if cart belongs to a user
-        else{
+        else {
             let timestamp = new Date().getTime()
             let cart = {}
             cart.cartID = uuidv4();
-            cart.userID = 'Guest : '+ uuidv4();
+            cart.userID = 'Guest : ' + uuidv4();
             cart.created = timestamp;
             cart.updated = timestamp;
             //rest of code
 
 
 
-            //send response
-            res.cookies('cart', cart, {maxAge: 3600000})
-                .status(200).send('Cart saved for '+ cart.userID)
+            console.log(cart);
+            // send response
+            res.cookie('cart', cart, { maxAge: 3600000 })
+                .status(200).send('Cart saved for ' + cart.userID)
         }
 
-    }else{
+    } else {
         let timestamp = new Date().getTime()
         let cart = {}
         cart.cartID = uuidv4();
@@ -105,8 +110,12 @@ if(isAuthenticated()){
 
 
 
-        //send response
-        res.cookies('cart', cart, { maxAge: 3600000 })
+        console.log(cart);
+        // send response
+        res.cookie('cart', cart, { maxAge: 3600000 })
             .status(200).send('Cart saved for ' + cart.userID)
-    }   
+    }
 }
+
+// code is not DRY but gawd it works
+
