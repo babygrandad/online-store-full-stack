@@ -118,4 +118,83 @@ laudantium dolores perferendis quae. Dignissimos consectetur ratione dolores quo
 rem esse temporibus ipsum totam inventore at, 
 nemo excepturi facilis quod sed sit harum sequi reiciendis vel.*/
 
+let newItem = {color, size, quantity, productID, entryID} = req.body;
+if (req.isAuthenticated()) {
+  //scinario 1. User Makes a Cart as Guest and Then Logs In:
+  if (req.cookies.cart) {
+    const cart = req.cookies.cart;
+    const userID = cart.userID;
 
+    //check who the cart belongs to.
+    //if cart belongs to guest
+    if (userID.startsWith('Guest :')) {
+      cart.userID = req.user.email
+      cart.updated = new Date().getTime();
+      //rest of code
+
+      console.log(cart);
+      // send response
+      responseWithCookie(res, cart, cart.userID);
+    }
+
+    //if cart belongs to this user 
+    else if (userID === req.user.email) {
+      cart.updated = new Date().getTime();
+      //rest of code
+
+      console.log(cart);
+      // send response
+      responseWithCookie(res, cart, cart.userID);
+    }
+
+    //if cart belongs to another user
+    else {
+      let cart = newCartForAuthUser()
+      //rest of code
+
+      console.log(cart);
+      // send response
+      responseWithCookie(res, cart, cart.userID);
+    }
+  } else {
+    // Scinario 2. Logged-In User Creates a Cart:
+    let cart = newCartForAuthUser();
+    console.log(cart);
+    // send response
+    responseWithCookie(res, cart, cart.userID);
+  }
+} else {
+  if (req.cookies.cart) {
+    const cart = req.cookies.cart;
+    const userID = cart.userID;
+    //Check who the cart belongs to
+
+    //if cart belongs belongs to a guest
+    if (userID.startsWith('Guest :')) {
+      cart.updated = new Date().getTime();
+      //rest of code
+
+      console.log(cart);
+      // send response
+      responseWithCookie(res, cart, "Guest shopper");
+    }
+
+    //if cart belongs to a user
+    else {
+      let cart = newCartForGuest();
+      //rest of code
+
+      console.log(cart);
+      // send response
+      responseWithCookie(res, cart, "Guest shopper");
+    }
+
+  } else {
+    let cart = newCartForGuest();
+    //rest of code
+    
+    console.log(cart);
+    // send response
+    responseWithCookie(res, cart, "Guest shopper");
+  }
+}
