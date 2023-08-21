@@ -174,64 +174,111 @@ app.route('/cart')
 
 app.route('/cart/add').post((req, res) => {
 
-  //cartLogic.handleCart(req, res); //remebr you imported this logic from the modules folder
-  function createNewCartForUser(userID) {
-    const timestamp = new Date().getTime();
-    return {
-      cartID: uuidv4(),
-      userID,
-      created: timestamp,
-      updated: timestamp
-    };
+  function newCartForAuthUser() {
+    let timestamp = new Date().getTime()
+    let cart = {}
+    cart.cartID = uuidv4();
+    cart.userID = req.user.email;
+    cart.created = timestamp;
+    cart.updated = timestamp;
+    return cart;
   }
 
-  function createNewCartForGuest() {
-    const timestamp = new Date().getTime();
-    return {
-      cartID: uuidv4(),
-      userID: `Guest : ${uuidv4()}`,
-      created: timestamp,
-      updated: timestamp
-    };
+  function newCartForGuest() {
+    let timestamp = new Date().getTime()
+    let cart = {}
+    cart.cartID = uuidv4();
+    cart.userID = 'Guest : ' + uuidv4();
+    cart.created = timestamp;
+    cart.updated = timestamp;
+    return cart;
   }
 
+  function responseWithCookie(res, cart, user) {
+    res.cookie('cart', cart, { maxAge: 3600000 })
+      .status(200).send(`Cart saved for ${user}.`)
+  }
 
-  const isAuthenticated = req.isAuthenticated();
-  let cart = req.cookies.cart || {};
-  const userID = cart.userID || '';
+  if (req.isAuthenticated()) {
+    //scinario 1. User Makes a Cart as Guest and Then Logs In:
+    if (req.cookies.cart) {
+      const cart = req.cookies.cart;
+      const userID = cart.userID;
 
-  let responseMessage = '';
+      //check who the cart belongs to.
+      //if cart belongs to guest
+      if (userID.startsWith('Guest :')) {
+        cart.userID = req.user.email
+        cart.updated = new Date().getTime();
+        //rest of code
 
-  if (isAuthenticated) {
-    const isNewCart = !cart.cartID;
-    const isGuestCart = userID.startsWith('Guest :');
-    const isUserCart = userID === req.user.email;
+        console.log(cart);
+        // send response
+        responseWithCookie(res, cart, cart.userID);
+      }
 
-    if (isNewCart || (isGuestCart && isUserCart)) {
-      cart.userID = req.user.email;
-    } else if (isGuestCart && !isUserCart) {
-      cart = createNewCartForUser(req.user.email);
-    }
+      //if cart belongs to this user 
+      else if (userID === req.user.email) {
+        cart.updated = new Date().getTime();
+        //rest of code
 
-    cart.updated = new Date().getTime();
-    responseMessage = `Cart saved for ${cart.userID}`;
-  } else {
-    const isNewCart = !cart.cartID;
-    const isGuestCart = userID.startsWith('Guest :');
+        console.log(cart);
+        // send response
+        responseWithCookie(res, cart, cart.userID);
+      }
 
-    if (isNewCart || isGuestCart) {
-      cart.updated = new Date().getTime();
-      responseMessage = 'Cart saved for Guest';
+      //if cart belongs to another user
+      else {
+        let cart = newCartForAuthUser()
+        //rest of code
+
+        console.log(cart);
+        // send response
+        responseWithCookie(res, cart, cart.userID);
+      }
     } else {
-      cart = createNewCartForGuest();
-      responseMessage = `Cart saved for ${cart.userID}`;
+      // Scinario 2. Logged-In User Creates a Cart:
+      let cart = newCartForAuthUser();
+      console.log(cart);
+      // send response
+      responseWithCookie(res, cart, cart.userID);
+    }
+  } else {
+    if (req.cookies.cart) {
+      const cart = req.cookies.cart;
+      const userID = cart.userID;
+      //Check who the cart belongs to
+
+      //if cart belongs belongs to a guest
+      if (userID.startsWith('Guest :')) {
+        cart.updated = new Date().getTime();
+        //rest of code
+
+        console.log(cart);
+        // send response
+        responseWithCookie(res, cart, "Guest shopper");
+      }
+
+      //if cart belongs to a user
+      else {
+        let cart = newCartForGuest();
+        //rest of code
+
+        console.log(cart);
+        // send response
+        responseWithCookie(res, cart, "Guest shopper");
+      }
+
+    } else {
+      let cart = newCartForGuest();
+      //rest of code
+
+      console.log(cart);
+      // send response
+      responseWithCookie(res, cart, "Guest shopper");
     }
   }
 
-  cart.created = cart.created || new Date().getTime();
-
-  res.cookie('cart', cart, { maxAge: 3600000 })
-    .status(200).send(responseMessage);
 });
 
 app.route('/cart/remove').post((req, res) => {
