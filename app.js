@@ -172,7 +172,8 @@ app.route('/cart')
     res.render('cart', { pageTitle: "cart" })
   });
 
-app.route('/cart/add').post((req, res) => {
+app.route('/cart/add')
+.post((req, res) => {
   let newItem = { color, size, quantity, productID, entryID } = req.body;
 
   function newCartToDB(connection, cart, res) {
@@ -191,16 +192,6 @@ app.route('/cart/add').post((req, res) => {
         responseWithCookie(res, cart, "Guest shopper");
       }
     );
-  }
-
-  function newCartForAuthUser() {
-    let timestamp = new Date().getTime()
-    let cart = {}
-    cart.cartID = uuidv4();
-    cart.userID = req.user.email;
-    cart.created = timestamp;
-    cart.updated = timestamp;
-    return cart;
   }
 
   function updateModifedInDB(connection, cart, res) {
@@ -239,6 +230,16 @@ app.route('/cart/add').post((req, res) => {
     );
   }
 
+  function newCartForAuthUser() {
+    let timestamp = new Date().getTime()
+    let cart = {}
+    cart.cartID = uuidv4();
+    cart.userID = req.user.email;
+    cart.created = timestamp;
+    cart.updated = timestamp;
+    return cart;
+  }
+
   function newCartForGuest() {
     let timestamp = new Date().getTime()
     let cart = {}
@@ -270,10 +271,8 @@ app.route('/cart/add').post((req, res) => {
         console.log(cart);
         // send response
         updateUserIDandModifedInDB(connection, cart, res); //update userID & modified in DB
-
-
-
-      } else if (userID === req.user.email) {//if cart belongs to this user 
+      }
+      else if (userID === req.user.email) {//if cart belongs to this user 
         cart.updated = new Date().getTime();
         //rest of code
 
@@ -281,23 +280,29 @@ app.route('/cart/add').post((req, res) => {
         // send response
         updateModifedInDB(connection, cart, res); //Only update the modified field in DB
 
-      } else {//if cart belongs to another user
-        let cart = newCartForAuthUser()
-        //rest of code
       }
-    } else {// Scinario 2. Logged-In User Creates a Cart:
+      else {//if cart belongs to another user
+        let cart = newCartForAuthUser();
+        //rest of code
+        console.log(cart)
+        newCartToDB(connection, cart, res); // Add a brand new cart to the DB
+      }
+    }
+    else {// Scinario 2. Logged-In User Creates a Cart:
 
       let cart = newCartForAuthUser();
       console.log(cart);
       // send response
-      responseWithCookie(res, cart, cart.userID);
+      newCartToDB(connection, cart, res); // Add a brand new cart to the DB
     }
-  } else {
+  }
+  else {
     if (req.cookies.cart) {
       const cart = req.cookies.cart;
       const userID = cart.userID;
-      /*Check who the cart belongs to*/
       
+      //Check who the cart belongs to
+
       if (userID.startsWith('Guest :')) {//if cart belongs belongs to a guest
         cart.updated = new Date().getTime();
         //rest of code
@@ -315,7 +320,8 @@ app.route('/cart/add').post((req, res) => {
         newCartToDB(connection, cart, res); // Add a brand new cart to the DB
       }
 
-    } else { // Unregistared user creates a new cart
+    }
+    else { // Unregistared user creates a new cart
       let cart = newCartForGuest();
       //rest of code
       newItem.cartID = cart.cartID
@@ -329,7 +335,8 @@ app.route('/cart/add').post((req, res) => {
 
 });
 
-app.route('/cart/remove').post((req, res) => {
+app.route('/cart/remove')
+.post((req, res) => {
 
   //get and store the object coming from user in a variable
 
