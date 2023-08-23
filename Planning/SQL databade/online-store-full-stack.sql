@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 14, 2023 at 01:31 PM
+-- Generation Time: Aug 23, 2023 at 03:58 PM
 -- Server version: 8.1.0
 -- PHP Version: 7.4.3-4ubuntu2.19
 
@@ -28,17 +28,17 @@ SET time_zone = "+00:00";
 -- (See below for the actual view)
 --
 CREATE TABLE `all_shoes` (
-`product_id` int
-,`product_name` varchar(215)
-,`product_description` varchar(300)
-,`price` decimal(10,2)
-,`quantity` int
-,`new` int
-,`featured` int
-,`sizes` json
-,`genders` json
+`categories` json
 ,`colors` json
-,`categories` json
+,`featured` int
+,`genders` json
+,`new` int
+,`price` decimal(10,2)
+,`product_description` varchar(300)
+,`product_id` int
+,`product_name` varchar(215)
+,`quantity` int
+,`sizes` json
 );
 
 -- --------------------------------------------------------
@@ -48,9 +48,10 @@ CREATE TABLE `all_shoes` (
 --
 
 CREATE TABLE `carts` (
-  `cartID` varchar(255) NOT NULL,
-  `userID` varchar(255) DEFAULT NULL,
-  `timestamp` bigint DEFAULT NULL
+  `cart_id` varchar(255) NOT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  `created` bigint DEFAULT NULL,
+  `modified` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -60,11 +61,11 @@ CREATE TABLE `carts` (
 --
 
 CREATE TABLE `cart_items` (
-  `entryID` bigint NOT NULL,
-  `cartID` varchar(255) DEFAULT NULL,
+  `entry_id` bigint NOT NULL,
+  `cart_id` varchar(255) DEFAULT NULL,
   `product_id` int DEFAULT NULL,
   `color` varchar(50) DEFAULT NULL,
-  `size` varchar(10) DEFAULT NULL,
+  `size` int DEFAULT NULL,
   `quantity` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -592,9 +593,9 @@ INSERT INTO `sizes` (`size_id`, `size`) VALUES
 -- (See below for the actual view)
 --
 CREATE TABLE `temp_shoe_colors` (
-`product_id` int
+`colors` text
+,`product_id` int
 ,`product_name` varchar(215)
-,`colors` text
 );
 
 -- --------------------------------------------------------
@@ -623,16 +624,14 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `
 -- Indexes for table `carts`
 --
 ALTER TABLE `carts`
-  ADD PRIMARY KEY (`cartID`),
-  ADD KEY `userID` (`userID`);
+  ADD PRIMARY KEY (`cart_id`);
 
 --
 -- Indexes for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  ADD PRIMARY KEY (`entryID`),
-  ADD KEY `cartID` (`cartID`),
-  ADD KEY `product_id` (`product_id`);
+  ADD PRIMARY KEY (`entry_id`),
+  ADD KEY `cart_id` (`cart_id`);
 
 --
 -- Indexes for table `categories`
@@ -732,17 +731,10 @@ ALTER TABLE `sizes`
 --
 
 --
--- Constraints for table `carts`
---
-ALTER TABLE `carts`
-  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `customers` (`email`);
-
---
 -- Constraints for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cartID`) REFERENCES `carts` (`cartID`),
-  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`cart_id`);
 
 --
 -- Constraints for table `colors`
