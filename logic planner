@@ -1,4 +1,5 @@
-/*
+function multicart(){
+  /*
 
 # Scenario 1: User is not logged in
 if user is not logged in:
@@ -42,75 +43,49 @@ if user logs out:
 
 
 */
-
-
-
-connection.query(
-  'INSERT INTO Carts (cart_id, user_id, timestamp) VALUES (?,?,?)',
-  [cartID, userID, timestamp],
-    (error, results) => {
-  if(error) {
-    console.log(error);
-    res.status(500).send("Error storing cart.");
-    return;
-  }
-
-    // Registration successful
-    res.status(200).send("Cart added to Database");
 }
-)
-
-connection.query(
-  'INSERT INTO cart_items (entry_id, cart_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)',
-  [newItem.color, newItem.size, newItem.quantity, newItem.productID, newItem.entryID]
-    (error, results) => {
-  if(error) {
-    console.log(error);
-    res.status(500).send("Error storing item.");    
-
-    return;
-  }
-
-    // Registration successful
-    res.status(200).send("Cart item added to Database");
-}
-)
 
 
-///////////////
+function onecart(){
+  /* One Cart revision strategy
 
-let newItem = req.body;
-    const { color, size, quantity, productID, entryID } = newItem;
+  Guest user Logic.
 
-    if (req.cookies.cart) {
-      const cart = req.cookies.cart;
-      const userID = cart.userID;
-      const cartID = cart.cartID;
-      cart.updated = new Date().getTime();
-      newItem.cartID = cartID
-      cart.cartItems.push(newItem); // Push the newItem to the existing cartItems array
-      console.log(cart);
-      res.cookie('cart', cart, { maxAge: 3600000 }).status(200).send('success');
-    } else {
-      let cart = {};
-      let cartItemsList = [];
-      cart.cartID = uuidv4();
-      cart.userID = req.isAuthenticated() ? req.user.Email : "Guest : " + uuidv4();
-      cart.created = new Date().getTime();
-      cart.updated = new Date().getTime();
-      newItem.cartID = cart.cartID;
-      cartItemsList.push(newItem); // Push the newItem to the cartItemsList array
-      cart.cartItems = cartItemsList; // Assign the array to cart.cartItems
-      console.log(cart);
-      res.cookie('cart', cart, { maxAge: 3600000 }).status(200).send('success');
-    }
+    is there a cart already?
 
-///////////////
+    no  : 1. create new cart and store the info
+          2. return a cookie to user 
 
+    yes : 1. Update the information in the cart
+          2. update the moded
+          3. return cookie to user. 
+    
+  Logging in user logic.
+    
+    is there a cart in the bd already?
 
+      no  : 1. create new cart and store the info with user email
+            2. return a cookie to user 
 
-if(req.isAuthenticated()){
-  //logic t go in here
-}else{
-  // logic to go in here
+      yes : is there items in the guest cart
+          
+          yes : 1. get guest id username and store it
+                2. replace all items with that cart ID to use the DB cartID // merge carts
+                3. update the cart moded field
+                4. return cookie to user with updated information. 
+
+          no  : 1. get the cart info and return it as cookie
+      
+  Logged in user logic
+
+    is there a cart already in the db?
+
+    no  : 1. create new cart and store the info with user email
+          2. return a cookie to user.
+    
+    yes : 1. Update the information in the cart
+          2. update the moded
+          3. return cookie to user. 
+
+*/
 }
