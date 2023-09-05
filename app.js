@@ -439,27 +439,37 @@ app.route('/login')
     res.render('login', { pageTitle: "login" })
   })
   .post((req, res, next) => {
-     // Authenticate using the LocalStrategy we defined earlier
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      // If authentication fails, return the error message
-      console.log(info)
-      return res.status(401).json({ message: info.message });
+    // Check for the "cart" cookie and store its value if it exists
+    let cart = null;
+    if (req.cookies && req.cookies.cart) {
+      cart = req.cookies.cart
     }
 
-    // If authentication succeeds, log the user in using req.login()
-    req.login(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-      // Return a success message or the user object
-      return res.status(200).json({ message: 'Login successful', user });
-    });
-  })(req, res, next);
+    // Authenticate using the LocalStrategy we defined earlier
+      passport.authenticate('local', (err, user, info) => {
+        if (err) {
+          return next(err);
+        }
+        if (!user) { /*If authentication fails, return the error message*/
+          console.log(info);
+          return res.status(401).json({ message: info.message });
+        }
+
+        // If authentication succeeds, log the user in using req.login()
+        req.login(user, (err) => {
+          if (err) {
+            return next(err);
+          }
+
+          // Access the cartValue here and use it as needed
+          let {userID, cartID, created, updated} = cart;
+
+          // Return a success message or the user object
+          return res.status(200).json({ message: 'Login successful', user });
+        });
+      })(req, res, next);
   });
+
 
 //Testing Routes
 app.route('/test')
