@@ -74,16 +74,33 @@ function onecart() {
   
     Guest user Logic.
   
-      is there a cart already?
+      is there a local cart already?
   
       no  : 1. create new cart and store the info
             2. add cart to DB
             3. return a cookie to user 
   
-      yes : 1. Update the information in the cart
-            2. update the moded
-            3. return cookie to user. 
-      
+      yes : 1. Check if cart starts with "guest :"
+
+              Does it start with guest?
+
+              No  : 1. replace the cart with a new one
+                    2. store cart in db
+                    3. return cookie to user
+
+              Yes : 1. grab local cart inforamtion and store it
+                    2. Chceck if there is a cart in the db matching same username
+
+                    is there a cart in the DB with the same username?
+
+                    Yes : 1. store the information to the databse
+                          2. udpate the 'updated' field in the DB
+                          3. return a cookie to the useer with updated info
+
+                    no  : 1. create new cart and store the info
+                          2. add cart to DB
+                          3. return a cookie to user          
+              
     Logging in user logic.
       
       is there a local cart?
