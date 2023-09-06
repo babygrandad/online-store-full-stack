@@ -28,7 +28,7 @@ if (req.isAuthenticated()) {
     }
 }
 
-//pie test is all well and good
+//pie test final. if all goes well all is well
 
 
 //LOGGING-IN LOCIC
