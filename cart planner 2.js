@@ -28,6 +28,8 @@ if (req.isAuthenticated()) {
     }
 }
 
+//pie is so nice
+
 
 //LOGGING-IN LOCIC
 if (req.cookies && req.cookies.cart) {// Is there a local cart - Yes
