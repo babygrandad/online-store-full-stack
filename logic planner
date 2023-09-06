@@ -1,5 +1,3 @@
-let cow = "moo";
-
 function multicart() {
     /*
   
@@ -126,36 +124,40 @@ function onecart() {
 }
 
 async function updateModifedInDB(connection, cart, res, req) {
-    try {
-      const { userID, cartID, created, updated } = cart;
+  try {
+    const { userID, cartID, created, updated } = cart;
 
-      // SQL query 1 (using promise-based API)
-      const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
-      const insertCartValues = [updated, cartID];
-      const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
+    // SQL query 1 (using promise-based API)
+    const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
+    const insertCartValues = [updated, cartID];
+    const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
 
-      // SQL query 2 (using promise-based API)
-      const { color, size, quantity, productID, entryID } = req.body;
-      const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
-      const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
-      const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
+    // SQL query 2 (using promise-based API)
+    const { color, size, quantity, productID, entryID } = req.body;
+    const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
+    const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
+    const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
 
-      function determineUser() {
-        if (userID.startsWith("Guest :")) {
-          return "Guest User";
-        } else {
-          return userID;
-        }
+    function determineUser() {
+      if (userID.startsWith("Guest :")) {
+        return "Guest User";
+      } else {
+        return userID;
       }
-
-      // Handle response here
-      res
-        .cookie("cart", cart, { maxAge: 3600000 })
-        .status(200)
-        .send(`Cart saved for ${determineUser()}.`);
-    } catch (error) {
-      // Handle any error
-      console.error(error);
-      res.status(500).send("Error saving cart. Please try again");
     }
+
+    // Handle response here
+    res
+      .cookie("cart", cart, { maxAge: 3600000 })
+      .status(200)
+      .send(`Cart saved for ${determineUser()}.`);
+  } catch (error) {
+    // Handle any error
+    console.error(error);
+    res.status(500).send("Error saving cart. Please try again");
   }
+}
+
+
+
+  

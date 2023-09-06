@@ -439,11 +439,7 @@ app.route('/login')
     res.render('login', { pageTitle: "login" })
   })
   .post((req, res, next) => {
-    // Check for the "cart" cookie and store its value if it exists
-    let cart = null;
-    if (req.cookies && req.cookies.cart) {
-      cart = req.cookies.cart
-    }
+
 
     // Authenticate using the LocalStrategy we defined earlier
       passport.authenticate('local', (err, user, info) => {
@@ -461,8 +457,8 @@ app.route('/login')
             return next(err);
           }
 
-          // Access the cartValue here and use it as needed
-          let {userID, cartID, created, updated} = cart;
+          //!!!!!!!!!!!!!!!!!!!!! it all goes here
+          
 
           // Return a success message or the user object
           return res.status(200).json({ message: 'Login successful', user });
