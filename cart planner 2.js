@@ -30,40 +30,55 @@ else {
 
 
 function loginlogic(){
-    // Check for the "cart" cookie and store its value if it exists
-    if (req.cookies && req.cookies.cart) {
+    
+    if (req.cookies && req.cookies.cart) {// Is there a local cart - Yes
       let cart = req.cookies.cart
 
-      if(cart.userID.startsWith("Guest :")){
+      if(cart.userID.startsWith("Guest :")){ // does the userID start with Guest? - Yes
         
-        //check if thers a matching db cart
-        
-            //yes
-            if(checkIfCartExistsInDB(req, res, cart, connection).Length === 1){
+            if(checkIfCartExistsInDB(req, res, connection).Length === 1){ //does the user have a cart in the DB? - Yes
 
-                const cartResults = checkIfCartExistsInDB(req, res, cart, connection)
+                const cartResults = checkIfCartExistsInDB(req, res, connection)
 
                 loginFoundMatchingCart(res, cart, connection, cartResults)
             }
-            //no
-            else{
-
+            else{ //does the user have a cart in the DB? - No
+                let cart = newCartForAuthUser();
+                newEmptyCartToDB(res, cart, connection);
             }
 
-            //no
-
-      } else {
+      }
+      else { // does the userID start with Guest? - No
 
         let cart = newCartForAuthUser() 
 
         newEmptyCartToDB(res ,cart ,connection)
       }
       
-    }else{
+    }else{// Is there a local cart - no
       
+        let cart = null;
+
+        if(checkIfCartExistsInDB(req, res, connection).Length === 1){ //does the user have a cart in the DB? - Yes
+
+            const cartResults = checkIfCartExistsInDB(req, res, connection);
+
+            cart.userID = cartResults[0].user_id;
+            cart.cartID = cartResults[0].cart_id;
+            cart.created = cartResults[0].created;
+            cart.updated = cartResults[0].updated;
+
+            res
+                .cookie("cart", cart, { maxAge: 3600000 })
+                .status(200)
+                .send(`Cart saved for ${cart.userID}.`);
+        }
+        else{ //does the user have a cart in the DB? - No
+            let cart = newCartForAuthUser();
+            newEmptyCartToDB(res, cart, connection);
+        }
     }
-    // Access the cartValue here and use it as needed
-    let { userID, cartID, created, updated } = cart;
+
 }
 
 
@@ -190,19 +205,17 @@ async function updateGuestCartInDB(req, res, cart, connection) {
     }
 }
 
-async function checkIfCartExistsInDB(req, res, cart, connection) {
+async function checkIfCartExistsInDB(req, res, connection) {
     try {
-      const { userID, cartID} = cart;
+        // SQL query 1 (using promise-based API) - check to see if there's a matching
+        // username cart as the logged-in user.
+        const checkCartQuery = "SELECT * FROM carts WHERE user_id = ?";
+        const [cartResults] = await connection.promise().query(checkCartQuery, [req.user.email]);
 
-      // SQL query 1 (using promise-based API) - check to see if there's a matching
-    // username cart as the logged-in user.
-    const checkCartQuery = "SELECT * FROM carts WHERE user_id = ?";
-    const [cartResults] = await connection.promise().query(checkCartQuery, [req.user.email]);
-
-    return cartResults;
+        return cartResults;
 
     }
-    catch (error){
+    catch (error) {
         console.error(error);
         res.status(500).send("Error finding cart");
     }
