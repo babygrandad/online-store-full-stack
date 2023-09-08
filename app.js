@@ -417,7 +417,6 @@ app.route('/login')
         const [cartResults] = await connection.promise().query(checkCartQuery, [user.email]);
         console.log('I just checked if theres a cart for this user and...')
 
-
         //testing cart results
         console.log('cart results -: length = ' + cartResults.length);
 
@@ -442,7 +441,6 @@ app.route('/login')
         const [cartResults] = await connection.promise().query(checkCartQuery, [user.email]);
         console.log('I just checked if theres a cart for this user and...')
 
-
         //testing cart results
         console.log('cart results -: length = ' + cartResults.length);
 
@@ -450,7 +448,7 @@ app.route('/login')
           console.log('This user has a cart in the DB')
           loginFoundExistingCart(res, cartResults)
         } else { //does the user have a cart in the DB? - No
-          let cart = newCartForAuthUser();
+          let cart = newCartForAuthUser(user);
           newEmptyCartToDB(res, cart, connection)
         }
       }
@@ -506,7 +504,6 @@ app.route('/login')
       const updateCartQuery = "UPDATE carts SET user_id = ?, modified = ? WHERE cart_id = ?";
       const updateCartValues = [user.email, newUpdate, cartID];
       const [updateCartResults] = await connection.promise().query(updateCartQuery, updateCartValues);
-
 
       // Update the cart object with the results and set a cookie
       cart.userID = user.email;

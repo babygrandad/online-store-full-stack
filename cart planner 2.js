@@ -225,7 +225,7 @@ function cartLogicSecond() {
                 console.log('This user has a cart in the DB')
                 loginFoundExistingCart(res, cartResults)
             } else { //does the user have a cart in the DB? - No
-                let cart = newCartForAuthUser();
+                let cart = newCartForAuthUser(user);
                 newEmptyCartToDB(res, cart, connection)
             }
         }
