@@ -194,7 +194,6 @@ function cartLogicSecond() {
             const [cartResults] = await connection.promise().query(checkCartQuery, [user.email]);
             console.log('I just checked if theres a cart for this user and...')
 
-
             //testing cart results
             console.log('cart results -: length = ' + cartResults.length);
 
@@ -218,17 +217,16 @@ function cartLogicSecond() {
             const checkCartQuery = "SELECT * FROM carts WHERE user_id = ?";
             const [cartResults] = await connection.promise().query(checkCartQuery, [user.email]);
             console.log('I just checked if theres a cart for this user and...')
-    
-    
+
             //testing cart results
             console.log('cart results -: length = ' + cartResults.length);
-    
+
             if (cartResults.length === 1) { //does the user have a cart in the DB? - Yes
                 console.log('This user has a cart in the DB')
                 loginFoundExistingCart(res, cartResults)
             } else { //does the user have a cart in the DB? - No
                 let cart = newCartForAuthUser();
-                newEmptyCartToDB(res,cart,connection)
+                newEmptyCartToDB(res, cart, connection)
             }
         }
         catch (error) {
@@ -253,6 +251,12 @@ function cartLogicSecond() {
         const updateCartValues = [newUpdate, user_id];
         const [updateCartResults] = await connection.promise().query(updateCartQuery, updateCartValues);
 
+        console.log('now Im deleting the guest cart')
+        // SQL query 4 (using promise-based API) - update the modified timestamp in carts
+        const deleteCartQuery = "Delete FROM carts WHERE cart_id = ?";
+        const deleteCartValues = [cartID];
+        const [deleteCartResults] = await connection.promise().query(deleteCartQuery, deleteCartValues);
+
         // Update the cart object with the results and set a cookie
         cart.userID = user_id;
         cart.cartID = cart_id;
@@ -268,16 +272,15 @@ function cartLogicSecond() {
             .send(`Login Successful`);
     }
     async function loginDidNotFoundMatchingCart(res, cart, connection, user) {
-        const {cartID, created} = cart
+        const { cartID, created } = cart
 
         const newUpdate = new Date().getTime();
 
-        console.log('now Im updating the cart\'s user_id' )
+        console.log('now Im updating the cart\'s user_id')
         // SQL query 3 (using promise-based API) - update the modified timestamp in carts
         const updateCartQuery = "UPDATE carts SET user_id = ?, modified = ? WHERE cart_id = ?";
         const updateCartValues = [user.email, newUpdate, cartID];
         const [updateCartResults] = await connection.promise().query(updateCartQuery, updateCartValues);
-        
 
         // Update the cart object with the results and set a cookie
         cart.userID = user.email;
@@ -295,7 +298,7 @@ function cartLogicSecond() {
     }
     async function loginFoundExistingCart(res, cartResults) {
         const { cart_id, user_id, created, modified } = cartResults[0];
-        
+
         console.log('Now im creating a cookie with this users exiting DB cart')
         // Update the cart object with the results and set a cookie
         let cart = {}
@@ -303,10 +306,10 @@ function cartLogicSecond() {
         cart.cartID = cart_id;
         cart.created = created;
         cart.updated = modified;
-    
+
         //testing cart results
         console.log(cart);
-    
+
         res
             .cookie("cart", cart, { maxAge: 3600000 })
             .status(200)
