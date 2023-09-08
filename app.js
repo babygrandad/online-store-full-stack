@@ -434,6 +434,31 @@ app.route('/login')
         res.status(500).send("Error finding cart");
       }
     }
+    async function checkIfCartExistsInDB(res, connection, user) {
+      try {
+        // SQL query 1 (using promise-based API) - check to see if there's a matching
+        // username cart as the logged-in user.
+        const checkCartQuery = "SELECT * FROM carts WHERE user_id = ?";
+        const [cartResults] = await connection.promise().query(checkCartQuery, [user.email]);
+        console.log('I just checked if theres a cart for this user and...')
+
+
+        //testing cart results
+        console.log('cart results -: length = ' + cartResults.length);
+
+        if (cartResults.length === 1) { //does the user have a cart in the DB? - Yes
+          console.log('This user has a cart in the DB')
+          loginFoundExistingCart(res, cartResults)
+        } else { //does the user have a cart in the DB? - No
+          let cart = newCartForAuthUser();
+          newEmptyCartToDB(res, cart, connection)
+        }
+      }
+      catch (error) {
+        console.error(error);
+        res.status(500).send("Error finding cart");
+      }
+    }
     async function loginFoundMatchingCart(res, cart, connection, cartResults) {
       const { cart_id, user_id } = cartResults[0];
       const { cartID } = cart
@@ -450,6 +475,12 @@ app.route('/login')
       const updateCartQuery = "UPDATE carts SET modified = ? WHERE user_id = ?";
       const updateCartValues = [newUpdate, user_id];
       const [updateCartResults] = await connection.promise().query(updateCartQuery, updateCartValues);
+
+      console.log('now Im deleting the guest cart')
+      // SQL query 4 (using promise-based API) - update the modified timestamp in carts
+      const deleteCartQuery = "Delete FROM carts WHERE cart_id = ?";
+      const deleteCartValues = [cartID];
+      const [deleteCartResults] = await connection.promise().query(deleteCartQuery, deleteCartValues);
 
       // Update the cart object with the results and set a cookie
       cart.userID = user_id;
@@ -491,6 +522,25 @@ app.route('/login')
         .status(200)
         .send(`Login Successful`);
     }
+    async function loginFoundExistingCart(res, cartResults) {
+      const { cart_id, user_id, created, modified } = cartResults[0];
+
+      console.log('Now im creating a cookie with this users exiting DB cart')
+      // Update the cart object with the results and set a cookie
+      let cart = {}
+      cart.userID = user_id;
+      cart.cartID = cart_id;
+      cart.created = created;
+      cart.updated = modified;
+
+      //testing cart results
+      console.log(cart);
+
+      res
+        .cookie("cart", cart, { maxAge: 3600000 })
+        .status(200)
+        .send(`Login Successful`);
+    }
 
     // Authenticate using the LocalStrategy we defined earlier
     passport.authenticate('local', (err, user, info) => {
@@ -510,24 +560,21 @@ app.route('/login')
 
         if (req.cookies.cart) {// Is there a local cart - Yes
           let cart = req.cookies.cart
-
+          console.log('this user has  local cart')
           if (cart.userID.startsWith("Guest :")) { // does the userID start with Guest? - Yes
-
+            console.log('this users cart starts with "Guest"')
             // check to see if theres a db cart (condition check is in this function)
             checkIfCartExistsInDBAlso(res, cart, connection, user);
           }
           else { // does the userID start with Guest? - No
-
+            console.log('this users cart does not start with guest so im deleting it and creating a new one')
             let cart = newCartForAuthUser(user)
             newEmptyCartToDB(res, cart, connection)
           }
 
         } else {// Is there a local cart - no
-
-          let cart = newCartForAuthUser(user);
-
-          // check to see if theres a db cart (condition check is in this function)
-          checkIfCartExistsInDBAlso(res, cart, connection, user);
+          console.log('This user does not have a local cart')
+          checkIfCartExistsInDB(res, connection, user)
         }
 
         // ! Important ( Moved the functions from here)
