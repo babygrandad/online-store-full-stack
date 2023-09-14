@@ -1,136 +1,3 @@
-//LOGGING-IN LOGIC
-function cartLogicFirst() {
-    if (req.cookies.cart) {// Is there a local cart - Yes
-        let cart = req.cookies.cart
-
-        if (cart.userID.startsWith("Guest :")) { // does the userID start with Guest? - Yes
-
-            const cartResults = checkIfCartExistsInDB(res, connection, user);
-            console.log("What if statement sees if thers is a match: ", cartResults)
-            if (cartResults.length === 1) { //does the user have a cart in the DB? - Yes
-
-                loginFoundMatchingCart(res, cart, connection, cartResults)
-            }
-            else { //does the user have a cart in the DB? - No
-                let cart = newCartForAuthUser();
-                newEmptyCartToDB(res, cart, connection);
-            }
-
-        }
-        else { // does the userID start with Guest? - No
-
-            let cart = newCartForAuthUser()
-
-            newEmptyCartToDB(res, cart, connection)
-        }
-
-    } else {// Is there a local cart - no
-
-        let cart = null;
-
-        const cartResults = checkIfCartExistsInDB(res, connection, user);
-        console.log("What if statement sees if thers no match: ", cartResults)
-        if (cartResults.length === 1) { //does the user have a cart in the DB? - Yes
-
-            cart.userID = cartResults[0].user_id;
-            cart.cartID = cartResults[0].cart_id;
-            cart.created = cartResults[0].created;
-            cart.updated = cartResults[0].updated;
-
-            //testing cart results
-            console.log(cart);
-
-            res
-                .cookie("cart", cart, { maxAge: 3600000 })
-                .status(200)
-                .send(`Login Successful`);
-        }
-        else { //does the user have a cart in the DB? - No
-            let cart = newCartForAuthUser();
-            newEmptyCartToDB(res, cart, connection);
-        }
-    }
-
-    function newCartForAuthUser() {
-        let timestamp = new Date().getTime();
-        let cart = {};
-        cart.cartID = uuidv4();
-        cart.userID = req.user.email;
-        cart.created = timestamp;
-        cart.updated = timestamp;
-        return cart;
-    }
-    async function newEmptyCartToDB(res, cart, connection) {
-        try {
-            const { cartID, userID, created, updated } = cart;
-
-            // SQL query 1 (using promise-based API)
-            const insertCartQuery = "INSERT INTO carts (cart_id, user_id, created, modified) VALUES (?,?,?,?)";
-            const insertCartValues = [cartID, userID, created, updated];
-            const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
-            //testing cart results
-            console.log(cart);
-
-            // Handle response here
-            res
-                .cookie("cart", cart, { maxAge: 3600000 })
-                .status(200)
-                .send(`Login Successful`);
-        } catch (error) {
-            // Handle any error
-            console.error(error);
-            res.status(500).send("Error saving cart. Please try again.");
-        }
-    }
-    async function checkIfCartExistsInDB(res, connection, user) {
-        try {
-            // SQL query 1 (using promise-based API) - check to see if there's a matching
-            // username cart as the logged-in user.
-            const checkCartQuery = "SELECT * FROM carts WHERE user_id = ?";
-            const [cartResults] = await connection.promise().query(checkCartQuery, [user.email]);
-
-            //testing cart results
-            console.log('cart results -: ' + [cartResults]);
-            return cartResults;
-
-        }
-        catch (error) {
-            console.error(error);
-            res.status(500).send("Error finding cart");
-        }
-    }
-    async function loginFoundMatchingCart(res, cart, connection, cartResults) {
-        const { cart_id, user_id } = cartResults[0];
-        const { cartID } = cart
-        const newUpdate = new Date().getTime();
-
-        // SQL query 2 (using promise-based API) - update cart_items with the matched cart_id
-        const updateCartItemsQuery = "UPDATE cart_items SET cart_id = ? WHERE cart_id = ?";
-        const updateCartItemsValues = [cart_id, cartID];
-        const [updateResults] = await connection.promise().query(updateCartItemsQuery, updateCartItemsValues);
-
-        // SQL query 3 (using promise-based API) - update the modified timestamp in carts
-        const updateCartQuery = "UPDATE carts SET modified = ? WHERE user_id = ?";
-        const updateCartValues = [newUpdate, user_id];
-        const [updateCartResults] = await connection.promise().query(updateCartQuery, updateCartValues);
-
-        // Update the cart object with the results and set a cookie
-        cart.userID = user_id;
-        cart.cartID = cart_id;
-        cart.created = cartResults[0].created;
-        cart.updated = newUpdate;
-
-        //testing cart results
-        console.log(cart);
-
-        res
-            .cookie("cart", cart, { maxAge: 3600000 })
-            .status(200)
-            .send(`Login Successful`);
-    }
-}
-
-
 //LOGGING-IN LOGIC RE-REVISED
 function cartLogicSecond() {
     if (req.cookies.cart) {// Is there a local cart - Yes
@@ -172,6 +39,14 @@ function cartLogicSecond() {
             const insertCartQuery = "INSERT INTO carts (cart_id, user_id, created, modified) VALUES (?,?,?,?)";
             const insertCartValues = [cartID, userID, created, updated];
             const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
+
+            try {
+                const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+                cart.sumQuantity = CartSumQuantity;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
             //testing cart results
             console.log(cart);
 
@@ -262,6 +137,12 @@ function cartLogicSecond() {
         cart.cartID = cart_id;
         cart.created = cartResults[0].created;
         cart.updated = newUpdate;
+        try {
+            const CartSumQuantity = await getCartSumQuantity(cart_id, connection);
+            cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+            console.error('Error:', error);
+        }
 
         //testing cart results
         console.log(cart);
@@ -287,6 +168,12 @@ function cartLogicSecond() {
         cart.cartID = cartID;
         cart.created = created;
         cart.updated = newUpdate;
+        try {
+            const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+            cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+            console.error('Error:', error);
+        }
 
         //testing cart results
         console.log(cart);
@@ -307,6 +194,13 @@ function cartLogicSecond() {
         cart.created = created;
         cart.updated = modified;
 
+        try {
+            const CartSumQuantity = await getCartSumQuantity(cart_id, connection);
+            cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
         //testing cart results
         console.log(cart);
 
@@ -321,15 +215,34 @@ function cartLogicSecond() {
 
 
 
+//Global function 
+async function getCartSumQuantity(identifier, connection) {
+    try {
+        const totals = identifier
 
+        const totalsQuery = 'SELECT SUM(quantity) AS count_value FROM cart_items WHERE cart_id = ?';
+        const totalsvalue = [totals]
+        const [totalsReuslts] = await connection.promise().query(totalsQuery, totalsvalue);
 
+        return totalsReuslts[0].count_value;
+    }
+    catch (error) {
+        throw error;
+    }
+}
 
+try {
+    const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+    cart.sumQuantity = CartSumQuantity;
+} catch (error) {
+    console.error('Error:', error);
+}
 
 
 
 //-------------------------------------------------------------------------------
 
-//LOGGED IN AND LOGGED OUT LOGIC
+//LOGGED IN AND GUEST LOGIC
 if (req.isAuthenticated()) { //Is the user logged in? - Yes
 
     // There is a cart already so.
@@ -381,6 +294,13 @@ async function newCartToDB(req, res, cart, connection) {
         const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
         const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
         const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
+        
+        try {
+            const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+            cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+            console.error('Error:', error);
+        }
 
         function determineUser() {
             if (userID.startsWith("Guest :")) {
@@ -406,7 +326,7 @@ async function newCartToDB(req, res, cart, connection) {
 }
 async function updateGuestCartInDB(req, res, cart, connection) {
     try {
-        const { userID, cartID, updated } = cart;
+        const { cartID, updated } = cart;
 
         // SQL query 1 (using promise-based API)
         const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
@@ -419,6 +339,13 @@ async function updateGuestCartInDB(req, res, cart, connection) {
         const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
         const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
         const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
+
+        try {
+            const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+            cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+            console.error('Error:', error);
+        }
 
         //testing cart results
         console.log(cart);
@@ -448,6 +375,13 @@ async function updateAuthCartInDB(req, res, cart, connection) {
         const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
         const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
         const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
+
+        try {
+            const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+            cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+            console.error('Error:', error);
+        }
 
         //testing cart results
         console.log(cart);

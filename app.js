@@ -226,6 +226,13 @@ app.route('/cart/add')
         const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
         const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
 
+        try {
+          const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+          cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+
         function determineUser() {
           if (userID.startsWith("Guest :")) {
             return "Guest User";
@@ -250,7 +257,7 @@ app.route('/cart/add')
     }
     async function updateGuestCartInDB(req, res, cart, connection) {
       try {
-        const { userID, cartID, updated } = cart;
+        const { cartID, updated } = cart;
 
         // SQL query 1 (using promise-based API)
         const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
@@ -263,6 +270,13 @@ app.route('/cart/add')
         const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
         const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
         const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
+
+        try {
+          const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+          cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+          console.error('Error:', error);
+        }
 
         //testing cart results
         console.log(cart);
@@ -292,6 +306,13 @@ app.route('/cart/add')
         const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
         const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
         const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
+
+        try {
+          const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+          cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+          console.error('Error:', error);
+        }
 
         //testing cart results
         console.log(cart);
@@ -330,6 +351,21 @@ app.route('/cart/remove')
 
   });
 
+// -- Global Cart Function
+async function getCartSumQuantity(identifier, connection) {
+  try {
+    const totals = identifier
+
+    const totalsQuery = 'SELECT SUM(quantity) AS count_value FROM cart_items WHERE cart_id = ?';
+    const totalsvalue = [totals]
+    const [totalsReuslts] = await connection.promise().query(totalsQuery, totalsvalue);
+
+    return totalsReuslts[0].count_value;
+  }
+  catch (error) {
+    throw error;
+  }
+}
 
 
 //sign up routes
@@ -395,6 +431,14 @@ app.route('/login')
         const insertCartQuery = "INSERT INTO carts (cart_id, user_id, created, modified) VALUES (?,?,?,?)";
         const insertCartValues = [cartID, userID, created, updated];
         const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
+
+        try {
+          const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+          cart.sumQuantity = CartSumQuantity;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+
         //testing cart results
         console.log(cart);
 
@@ -485,6 +529,12 @@ app.route('/login')
       cart.cartID = cart_id;
       cart.created = cartResults[0].created;
       cart.updated = newUpdate;
+      try {
+        const CartSumQuantity = await getCartSumQuantity(cart_id, connection);
+        cart.sumQuantity = CartSumQuantity;
+      } catch (error) {
+        console.error('Error:', error);
+      }
 
       //testing cart results
       console.log(cart);
@@ -510,6 +560,12 @@ app.route('/login')
       cart.cartID = cartID;
       cart.created = created;
       cart.updated = newUpdate;
+      try {
+        const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+        cart.sumQuantity = CartSumQuantity;
+      } catch (error) {
+        console.error('Error:', error);
+      }
 
       //testing cart results
       console.log(cart);
@@ -529,6 +585,13 @@ app.route('/login')
       cart.cartID = cart_id;
       cart.created = created;
       cart.updated = modified;
+
+      try {
+        const CartSumQuantity = await getCartSumQuantity(cart_id, connection);
+        cart.sumQuantity = CartSumQuantity;
+      } catch (error) {
+        console.error('Error:', error);
+      }
 
       //testing cart results
       console.log(cart);
