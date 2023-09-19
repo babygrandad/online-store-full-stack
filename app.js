@@ -169,7 +169,22 @@ app.route('/categories')
 //Cart routes 
 app.route('/cart')
   .get((req, res) => {
-    res.render('cart', { pageTitle: "cart" })
+
+    if(req.cookies.cart){
+      const {cartID, userID, created, updated} = req.cookies.cart;
+
+      const selectSQl = (`SELECT * FROM cart_info WHERE cart_id = "` + cartID + `" ;`);
+
+      connection.query(selectSQl, (error, results, fields) => {
+        if (error) throw error;
+  
+        res.render('cart', { pageTitle: "Cart", results: results }); // send the results back to the client
+      })
+    }else{
+      let results = []
+      res.render('cart', { pageTitle: "Cart", results: results });
+    }
+    
   });
 
 app.route('/cart/add')
@@ -394,9 +409,10 @@ app.route('/signup')
             res.status(500).send("Error registering user");
             return;
           }
-
+          const message = "User registered successfully";
           // Registration successful
-          res.status(200).send("User registered successfully");
+          res.redirect(`/login?message=${message}`);
+          //res.status(200).send("User registered successfully");
         }
       );
     });
@@ -406,7 +422,7 @@ app.route('/signup')
 //Login Routes
 app.route('/login')
   .get((req, res) => {
-    res.render('login', { pageTitle: "login" })
+    res.render('login', { pageTitle: "login", message: req.query.message || '' })
   })
   .post((req, res, next) => {
 
@@ -627,9 +643,8 @@ app.route('/login')
             checkIfCartExistsInDBAlso(res, cart, connection, user);
           }
           else { // does the userID start with Guest? - No
-            console.log('this users cart does not start with guest so im deleting it and creating a new one')
-            let cart = newCartForAuthUser(user)
-            newEmptyCartToDB(res, cart, connection)
+            console.log('this users cart does not start with guest so im checking if they have a cart in the DB')
+            checkIfCartExistsInDB(res, connection, user)
           }
 
         } else {// Is there a local cart - no

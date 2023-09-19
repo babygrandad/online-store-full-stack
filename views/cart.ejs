@@ -8,17 +8,22 @@
                 <th>Quantity</th>
                 <th>Subtotal</th>
             </tr>
-            <%- include('components/cart-item') %>
-                
+            <% let cartTotal = [] %>
+            <% results.forEach(cartItem => { %>
+                <%- include('components/cart-item', {cartItem: cartItem}) %>
+                <% cartTotal.push(cartItem.price * cartItem.quantity) %>
+            <% }) %>
+              
         </table>
 
 
-
+        <% if(results.length != 0){ %>
         <div class="totals-wrap d-flex justify-content-end">
             <table class="totals-table">
                 <tr>
                     <td>Total</td>
-                    <td>R 1300.00</td>
+                    <% let cartTotalSum = cartTotal.reduce((total, current) => total + current, 0); %>
+                    <td>R <%= cartTotalSum %></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -28,8 +33,12 @@
                 </tr>
             </table>
         </div>
-
-
+        <% }else{ %>
+            <div class="no-purchase text-center">
+                <h1 class="py-2">🥺</h1>
+                <h3>You have no items in your cart. Start shopping to see your purchases.</h3>
+            </div>
+        <% } %>
 
 
     </div>

@@ -9,9 +9,8 @@ function cartLogicSecond() {
             checkIfCartExistsInDBAlso(res, cart, connection, user);
         }
         else { // does the userID start with Guest? - No
-            console.log('this users cart does not start with guest so im deleting it and creating a new one')
-            let cart = newCartForAuthUser(user)
-            newEmptyCartToDB(res, cart, connection)
+            console.log('this users cart does not start with guest so im checking if they have a cart in the DB')
+            checkIfCartExistsInDB(res, connection, user)
         }
 
     } else {// Is there a local cart - no

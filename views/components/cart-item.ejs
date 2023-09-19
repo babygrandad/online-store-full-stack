@@ -1,15 +1,19 @@
 <tr>
     <td>
-        <div class="cart-info">
-            <img class="me-2" src="https://placehold.co/100x100" alt="">
+        <div class="cart-info" id="<%= cartItem.entry_id %>">
+            <img class="me-2" src="/assets/images/shoes/<%= cartItem.product_id %> - <%= cartItem.color %>.png
+            " alt="">
             <div>
-                <p class="font-weight-bold">Product Name</p>
-                <small>Price: R1300.00</small>
+                <b><%=  cartItem.product_name%></b>
+                <br>
+                <small>Price: R<%= cartItem.price %></small>
+                <br>
+                <small>Size: <%= cartItem.size %></small>
                 <br>
                 <a href="">Remove <i class="fa-solid fa-trash-can"></i></a>
             </div>
         </div>
     </td>
-    <td><input type="number" name="" id="" value="1"></td>
-    <td>R1300.00</td>
+    <td><input type="number" name="" id="" value="<%= cartItem.quantity%>"></td> <!--You should use the onchange method --> 
+    <td>R <%= cartItem.price * cartItem.quantity %></td>
 </tr>

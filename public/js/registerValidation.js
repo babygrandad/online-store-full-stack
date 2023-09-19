@@ -23,7 +23,7 @@ $('#signupForm').on('submit', function(e){
     checkNoValue(lName, e);
 
     //this is to stop form submission while testing
-    e.preventDefault();
+    //e.preventDefault();
 });
 
 
