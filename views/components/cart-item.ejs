@@ -1,42 +1,15 @@
-<div class="cart-item py-3 mt-2 mb-4 rounded-3">
-    <div class="row">
-        <div class="col-6 col-md-3 mb-2">
-            <img src="https://placehold.co/150" alt="">
-        </div>
-        <div class="col-6 col-md-3 mb-2">
-            <div class="col fs-5 fw-bolder mb-2">Nike Some wot wot</div>
-            <div class="col fw-bold mb-2">Colour: Lavender Purple</div>
-            <div class="col fw-bold mb-2">Size: 7</div>
-        </div>
-        <div class="col-md-3 mb-2">
-            <div class="row">
-                <div class="d-block">
-                    <form action="">
-                        <div class="input-group mb-4" role="group" aria-label="Basic example" id="<%=lope %>">
-                            <button type="button" class="btn btn-outline-secondary quantity-minus"
-                                onmousedown="lessQuantiy()">
-                                <i class="fa-sharp fa-solid fa-minus"></i>
-                            </button>
-                            <div class="form-floating">
-                                <input type="number" class="form-control product-quantity"min="1"
-                                    value="1" placeholder="Quantity">
-                                <label for="user-quantity">Quantity</label>
-                            </div>
-                            <button type="button" class="btn btn-outline-secondary quantity-plus"
-                                onmousedown="moreQuantity()">
-                                <i class="fa-sharp fa-solid fa-plus"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class="d-block fs-5 fw-bolder">
-                    R700.00                    
-                </div>
+<tr>
+    <td>
+        <div class="cart-info">
+            <img class="me-2" src="https://placehold.co/100x100" alt="">
+            <div>
+                <p class="font-weight-bold">Product Name</p>
+                <small>Price: R1300.00</small>
+                <br>
+                <a href="">Remove <i class="fa-solid fa-trash-can"></i></a>
             </div>
-
         </div>
-        <div class="col-md-3 mb-2 text-center">
-            <div class="btn btn-danger"><i class="fa-regular fa-trash-can"></i> Remove Item</div>
-        </div>
-    </div>
-</div>
+    </td>
+    <td><input type="number" name="" id="" value="1"></td>
+    <td>R1300.00</td>
+</tr>

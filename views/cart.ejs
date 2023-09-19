@@ -1,15 +1,37 @@
 <%- include('partials/header') %>
 <%- include('components/nav') %>
 
-    <div class="container px-4">
-        <div class="row">
-            <%- include('components/cart-item',{lope:'1'}) %>
-            <%- include('components/cart-item',{lope:'2'}) %>
-            <%- include('components/cart-item',{lope:'3'}) %>
+    <div class="container px-4 ">
+        <table class="cart-table w-100">
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+            <%- include('components/cart-item') %>
+                
+        </table>
+
+
+
+        <div class="totals-wrap d-flex justify-content-end">
+            <table class="totals-table">
+                <tr>
+                    <td>Total</td>
+                    <td>R 1300.00</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <a href="" class="btn btn-success">Check-Out <i class="fa-solid fa-cart-shopping"></i></a>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="row">
-            
-        </div>
+
+
+
+
     </div>
 
 <%- include('partials/footer') %>

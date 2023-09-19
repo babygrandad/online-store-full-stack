@@ -66,10 +66,63 @@
 
 /* ---------- Cart-page ---------- */
 
-.cart-item{
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 12px;
-    background-color: rgb(245, 245, 245);
+.cart-table{
+    border-collapse: collapse;
 }
+
+.cart-table th{
+    padding: 5px;
+    color: #fff;
+    background: #333;
+    font-weight: normal;
+}
+.cart-table td{
+    padding: 10px 0px;
+}
+.cart-table tr{
+    border-bottom: 1px solid #808080;
+}
+
+.cart-table tr:last-child{
+    border: none;
+}
+
+.cart-table td input{
+    width: 40px;
+    height: 30px;
+    padding: 5px;
+}
+
+td img{
+    height: 100px;
+    width: 100px;
+}
+
+.cart-info{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cart-info a{
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.totals-table a{
+    margin-top: 10px;
+}
+
+.totals-table{
+    border-top: 3px solid #333;
+    width: 100%;
+    max-width: 500px;
+}
+
+
+td:last-child, th:last-child{
+    text-align: right;
+}
+
 
 /* ---------- Products-page (Plural) ---------- */
 .colorCheckWrapper{
@@ -228,3 +281,12 @@ input[type=number]::-webkit-outer-spin-button {
     min-width: 120px;
 }
 
+/* Start of Media Query for screens with a max width of 600px */
+@media (max-width: 600px) {
+    /* Hide the paragraphs inside elements with class 'cart-inf' */
+    .cart-info p {
+      display: none;
+    }
+  }
+  /* End of Media Query */
+  
