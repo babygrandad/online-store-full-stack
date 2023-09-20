@@ -6,8 +6,20 @@ $(document).ready(function () {
         var productId = $(this).data('product-id');
         var entryId = $(this).data('entry-id');
         
-        // You can now use productId and entryId to identify and handle the product removal.
-        // For example, you can send an AJAX request to remove it from the cart.
+        // Create an object with the data to send
+        var data = {
+            productId: productId,
+            entryId: entryId
+        };
+
+        axios.patch('/cart/remove', data)
+        .then(function (response) {
+            location.reload();
+        })
+        .catch(function (error) {
+            alert('Error deleting item. Please try again.')
+            console.error(error);
+        });
     });
 
     // Quantity input change event
@@ -27,10 +39,9 @@ $(document).ready(function () {
         axios.patch('/cart/update', data)
             .then(function (response) {
                 location.reload();
-                // You may not need to do anything here if you redirect to the cart page.
             })
             .catch(function (error) {
-                // Handle errors (e.g., display an error message to the user)
+                alert('Error updating cart. Please try again.')
                 console.error(error);
             });
     });
