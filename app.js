@@ -346,30 +346,138 @@ app.route('/cart/add')
   });
 
 app.route('/cart/remove')
-  .post((req, res) => {
+  .delete((req, res) => {
+    const { productId, entryId } = req.body;
+    const cart = req.cookies.cart;
 
+    // Delete item from the cart
+    const deleteSql = 'DELETE FROM cart_items WHERE product_id = ? AND entry_id = ?';
+    const deleteValues = [productId, entryId];
 
+    connection.query(deleteSql, deleteValues, (deleteError, deleteResults, deleteFields) => {
+      if (deleteError) {
+        console.error(deleteError);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      // After successful deletion, update the 'modified' timestamp in the 'carts' table
+      const updateModifiedSql = 'UPDATE carts SET modified = ? WHERE cart_id = ?';
+      const currentTime = new Date().getTime(); // Get current timestamp
+      const updateModifiedValues = [currentTime, cart.cartID]; // You need to define 'cartId'
+
+      connection.query(updateModifiedSql, updateModifiedValues, (updateError, updateResults, updateFields) => {
+        if (updateError) {
+          console.error(updateError);
+          return res.status(500).json({ error: 'Database error' });
+        }
+
+        // Calculate the total quantity in 'cart_items' for the specific 'cart_id'
+        const calculateTotalQuantitySql = 'SELECT SUM(quantity) AS count_value FROM cart_items WHERE cart_id = ?';
+        const calculateTotalQuantityValues = [cart.cartID]; // You need to define 'cartId'
+
+        connection.query(calculateTotalQuantitySql, calculateTotalQuantityValues, (calculateTotalQuantityError, calculateTotalQuantityResults) => {
+          if (calculateTotalQuantityError) {
+            console.error(calculateTotalQuantityError);
+            return res.status(500).json({ error: 'Database error' });
+          }
+
+          cart.updated = currentTime;
+          cart.sumQuantity = calculateTotalQuantityResults[0].count_value;
+
+          // Update the cart in the cookie with the updated total quantity
+          console.log(cart);
+
+          // Respond with a success message indicating the item removal, 'modified' update, and total quantity
+          return res
+            .cookie("cart", cart, { maxAge: 3600000 })
+            .status(200)
+            .json({ message: 'Item removed from cart, modified timestamp updated, and total quantity calculated successfully' });
+        });
+      });
+    });
   });
+
 
 
 app.route('/cart/update')
   .patch((req, res) => {
     const { newQuantity, productId, entryId } = req.body;
+    const cart = req.cookies.cart;
 
-    const sql = 'UPDATE cart_items SET quantity = ? WHERE product_id = ? AND entry_id = ?';
-    const values = [newQuantity, productId, entryId];
-    
-    connection.query(sql, values, (error, results, fields) => {
-      if (error) {
-        // Handle the error gracefully, send an appropriate error response
-        console.error(error);
+    // Start a transaction to ensure all queries succeed or fail together
+    connection.beginTransaction(function (beginTransactionErr) {
+      if (beginTransactionErr) {
+        console.error(beginTransactionErr);
         return res.status(500).json({ error: 'Database error' });
       }
 
-      // Redirect to the cart page when the update is successful
-      return res.status(200).json({ message: 'Quantity updated successfully' });
+      // Update the quantity in the 'cart_items' table
+      const updateQuantitySql = 'UPDATE cart_items SET quantity = ? WHERE product_id = ? AND entry_id = ?';
+      const updateQuantityValues = [newQuantity, productId, entryId];
+
+      connection.query(updateQuantitySql, updateQuantityValues, function (updateQuantityErr, updateQuantityResults) {
+        if (updateQuantityErr) {
+          // Rollback the transaction on error
+          connection.rollback(function () {
+            console.error(updateQuantityErr);
+            return res.status(500).json({ error: 'Database error' });
+          });
+        } else {
+          // Update the 'modified' timestamp in the 'carts' table
+          const updateModifiedSql = 'UPDATE carts SET modified = ? WHERE cart_id = ?';
+          const currentTime = new Date().getTime();
+          const updateModifiedValues = [currentTime, cart.cartID];
+
+          connection.query(updateModifiedSql, updateModifiedValues, function (updateModifiedErr, updateModifiedResults) {
+            if (updateModifiedErr) {
+              // Rollback the transaction on error
+              connection.rollback(function () {
+                console.error(updateModifiedErr);
+                return res.status(500).json({ error: 'Database error' });
+              });
+            } else {
+              // Execute the SELECT query to calculate the total quantity in 'cart_items'
+              const calculateTotalQuantitySql = 'SELECT SUM(quantity) AS count_value FROM cart_items WHERE cart_id = ?';
+              const calculateTotalQuantityValues = [cart.cartID];
+
+              connection.query(calculateTotalQuantitySql, calculateTotalQuantityValues, function (calculateTotalQuantityErr, calculateTotalQuantityResults) {
+                if (calculateTotalQuantityErr) {
+                  // Rollback the transaction on error
+                  connection.rollback(function () {
+                    console.error(calculateTotalQuantityErr);
+                    return res.status(500).json({ error: 'Database error' });
+                  });
+                } else {
+                  // Commit the transaction if all queries are successful
+                  connection.commit(function (commitErr) {
+                    if (commitErr) {
+                      // Rollback the transaction on error
+                      connection.rollback(function () {
+                        console.error(commitErr);
+                        return res.status(500).json({ error: 'Database error' });
+                      });
+                    } else {
+                      // Send a success response with the updated total quantity
+                      const totalQuantity = calculateTotalQuantityResults[0].count_value;
+                      cart.updated = currentTime;
+                      cart.sumQuantity = totalQuantity;
+                      console.log(cart);
+                      return res
+                        .cookie("cart", cart, { maxAge: 3600000 })
+                        .status(200)
+                        .send('Item removed from cart and modified timestamp updated successfully');
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
     });
   });
+
+
 
 // -- Global Cart Function
 async function getCartSumQuantity(identifier, connection) {

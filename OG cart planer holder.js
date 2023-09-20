@@ -1,236 +1,77 @@
-//current working version of code. Cart Planner. cart/add complete
-function version4Updating() {
+app.route('/cart/update')
+  .patch((req, res) => {
+    const { newQuantity, productId, entryId } = req.body;
+    const cart = req.cookies.cart;
 
-  async function newCartToDB(connection, cart, res, req) {
-    try {
-      const { cartID, userID, created, updated } = cart;
+    // Start a transaction to ensure all queries succeed or fail together
+    connection.beginTransaction(function (beginTransactionErr) {
+      if (beginTransactionErr) {
+        console.error(beginTransactionErr);
+        return res.status(500).json({ error: 'Database error' });
+      }
 
-      // SQL query 1 (using promise-based API)
-      const insertCartQuery = "INSERT INTO carts (cart_id, user_id, created, modified) VALUES (?,?,?,?)";
-      const insertCartValues = [cartID, userID, created, updated];
-      const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
+      // Update the quantity in the 'cart_items' table
+      const updateQuantitySql = 'UPDATE cart_items SET quantity = ? WHERE product_id = ? AND entry_id = ?';
+      const updateQuantityValues = [newQuantity, productId, entryId];
 
-      // SQL query 2 (using promise-based API)
-      const { color, size, quantity, productID, entryID } = req.body;
-      const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
-      const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
-      const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
-
-      function determineUser() {
-        if (userID.startsWith("Guest :")) {
-          return "Guest User";
+      connection.query(updateQuantitySql, updateQuantityValues, function (updateQuantityErr, updateQuantityResults) {
+        if (updateQuantityErr) {
+          // Rollback the transaction on error
+          connection.rollback(function () {
+            console.error(updateQuantityErr);
+            return res.status(500).json({ error: 'Database error' });
+          });
         } else {
-          return userID;
+          // Update the 'modified' timestamp in the 'carts' table
+          const updateModifiedSql = 'UPDATE carts SET modified = ? WHERE cart_id = ?';
+          const currentTime = new Date().getTime();
+          const updateModifiedValues = [currentTime, cart.cartID];
+
+          connection.query(updateModifiedSql, updateModifiedValues, function (updateModifiedErr, updateModifiedResults) {
+            if (updateModifiedErr) {
+              // Rollback the transaction on error
+              connection.rollback(function () {
+                console.error(updateModifiedErr);
+                return res.status(500).json({ error: 'Database error' });
+              });
+            } else {
+              // Execute the SELECT query to calculate the total quantity in 'cart_items'
+              const calculateTotalQuantitySql = 'SELECT SUM(quantity) AS count_value FROM cart_items WHERE cart_id = ?';
+              const calculateTotalQuantityValues = [cart.cartID];
+
+              connection.query(calculateTotalQuantitySql, calculateTotalQuantityValues, function (calculateTotalQuantityErr, calculateTotalQuantityResults) {
+                if (calculateTotalQuantityErr) {
+                  // Rollback the transaction on error
+                  connection.rollback(function () {
+                    console.error(calculateTotalQuantityErr);
+                    return res.status(500).json({ error: 'Database error' });
+                  });
+                } else {
+                  // Commit the transaction if all queries are successful
+                  connection.commit(function (commitErr) {
+                    if (commitErr) {
+                      // Rollback the transaction on error
+                      connection.rollback(function () {
+                        console.error(commitErr);
+                        return res.status(500).json({ error: 'Database error' });
+                      });
+                    } else {
+                      // Send a success response with the updated total quantity
+                      const totalQuantity = calculateTotalQuantityResults[0].count_value;
+                      cart.updated = currentTime;
+                      cart.sumQuantity = totalQuantity;
+                      console.log(cart);
+                      return res
+                        .cookie("cart", cart, { maxAge: 3600000 })
+                        .status(200)
+                        .send('Item removed from cart and modified timestamp updated successfully');
+                    }
+                  });
+                }
+              });
+            }
+          });
         }
-      }
-
-      // Handle response here
-      res
-        .cookie("cart", cart, { maxAge: 3600000 })
-        .status(200)
-        .send(`Cart saved for ${determineUser()}.`);
-    } catch (error) {
-      // Handle any error
-      console.error(error);
-      res.status(500).send("Error saving cart. Please try again");
-    }
-  }
-
-  async function updateModifedInDB(connection, cart, res, req) {
-    try {
-      const { userID, cartID, updated } = cart;
-
-      // SQL query 1 (using promise-based API)
-      const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
-      const insertCartValues = [updated, cartID];
-      const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
-
-      // SQL query 2 (using promise-based API)
-      const { color, size, quantity, productID, entryID } = req.body;
-      const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
-      const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
-      const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
-
-      function determineUser() {
-        if (userID.startsWith("Guest :")) {
-          return "Guest User";
-        } else {
-          return userID;
-        }
-      }
-
-      // Handle response here
-      res
-        .cookie("cart", cart, { maxAge: 3600000 })
-        .status(200)
-        .send(`Cart saved for ${determineUser()}.`);
-    } catch (error) {
-      // Handle any error
-      console.error(error);
-      res.status(500).send("Error saving cart. Please try again");
-    }
-  }
-
-  async function updateUserIDandModifedInDB(connection, cart, res, req) {
-    try {
-      const { cartID, userID, updated } = cart;
-
-      // SQL query 1 (using promise-based API)
-      const insertCartQuery = "UPDATE carts SET user_id = ?, modified = ? WHERE cart_id = ?";
-      const insertCartValues = [userID, updated, cartID];
-      const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
-
-      // SQL query 2 (using promise-based API)
-      const { color, size, quantity, productID, entryID } = req.body;
-      const insertItemsQuery = "INSERT INTO cart_items (cart_id, entry_id, product_id, color, size, quantity) VALUES (?,?,?,?,?,?)";
-      const insertItemsValues = [cartID, entryID, productID, color, size, quantity];
-      const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
-
-      function determineUser() {
-        if (userID.startsWith("Guest :")) {
-          return "Guest User";
-        } else {
-          return userID;
-        }
-      }
-
-      // Handle response here
-      res
-        .cookie("cart", cart, { maxAge: 3600000 })
-        .status(200)
-        .send(`Cart saved for ${determineUser()}.`);
-    } catch (error) {
-      // Handle any error
-      console.error(error);
-      res.status(500).send("Error saving cart. Please try again");
-    }
-  }
-
-
-  function newCartForAuthUser() {
-    let timestamp = new Date().getTime();
-    let cart = {};
-    cart.cartID = uuidv4();
-    cart.userID = req.user.email;
-    cart.created = timestamp;
-    cart.updated = timestamp;
-    return cart;
-  }
-
-  function newCartForGuest() {
-    let timestamp = new Date().getTime();
-    let cart = {};
-    cart.cartID = uuidv4();
-    cart.userID = "Guest : " + uuidv4();
-    cart.created = timestamp;
-    cart.updated = timestamp;
-    return cart;
-  }
-
-  if (req.isAuthenticated()) {
-    //scinario 1. User Makes a Cart as Guest and Then Logs In:
-    if (req.cookies.cart) {
-      const cart = req.cookies.cart;
-      const userID = cart.userID;
-
-      //check who the cart belongs to.
-
-      if (userID.startsWith("Guest :")) {
-        //if cart belongs to guest
-        cart.userID = req.user.email;
-        cart.updated = new Date().getTime();
-        //rest of code
-
-        console.log(cart);
-        // send response
-        updateUserIDandModifedInDB(connection, cart, res, req); //update userID & modified in DB
-      } else if (userID === req.user.email) {
-        //if cart belongs to this user
-        cart.updated = new Date().getTime();
-        //rest of code
-
-        console.log(cart);
-        // send response
-        updateModifedInDB(connection, cart, res, req); //Only update the modified field in DB
-      } else {
-        //if cart belongs to another user
-        let cart = newCartForAuthUser();
-        //rest of code
-        console.log(cart);
-        newCartToDB(connection, cart, res, req); // Add a brand new cart to the DB
-      }
-    } else {
-      // Scinario 2. Logged-In User Creates a Cart:
-
-      let cart = newCartForAuthUser();
-      console.log(cart);
-      // send response
-      newCartToDB(connection, cart, res, req); // Add a brand new cart to the DB
-    }
-  } else {
-    if (req.cookies.cart) {
-      const cart = req.cookies.cart;
-      const userID = cart.userID;
-
-      //Check who the cart belongs to
-
-      if (userID.startsWith("Guest :")) {
-        //if cart belongs belongs to a guest
-        cart.updated = new Date().getTime();
-        //rest of code
-
-        console.log(cart);
-        // send response
-        updateModifedInDB(connection, cart, res, req); //Only update the modified field in DB
-      } else {
-        //if cart belongs to a user
-        let cart = newCartForGuest();
-
-        console.log(cart);
-        // send cart to bd
-        newCartToDB(connection, cart, res, req); // Add a brand new cart to the DB
-      }
-    } else {
-      // Unregistared user creates a new cart
-      let cart = newCartForGuest();
-      //rest of code
-
-      console.log(cart);
-      //Put cart into DB
-      newCartToDB(connection, cart, res, req); // Add a brand new cart to the DB
-    }
-  }
-
-}
-
-login.post((req, res, next) => {
-  // Check for the "cart" cookie and store its value if it exists
-  let cart = null;
-  if (req.cookies && req.cookies.cart) {
-    cart = req.cookies.cart
-  }
-
-  // Authenticate using the LocalStrategy we defined earlier
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) { /*If authentication fails, return the error message*/
-      console.log(info);
-      return res.status(401).json({ message: info.message });
-    }
-
-    // If authentication succeeds, log the user in using req.login()
-    req.login(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-
-      // Access the cartValue here and use it as needed
-      let { userID, cartID, created, updated } = cart;
-
-      // Return a success message or the user object
-      return res.status(200).json({ message: 'Login successful', user });
+      });
     });
-  })(req, res, next);
-});
+  });
