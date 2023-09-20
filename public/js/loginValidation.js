@@ -1,5 +1,8 @@
 //client side authentication script for Login page
-$("#loginForm").submit(function(event) {
+
+
+$(document).ready(function(){
+  $("#loginForm").submit(function(event) {
     event.preventDefault(); // Prevent form submission
   
     // Get form fields
@@ -26,7 +29,7 @@ $("#loginForm").submit(function(event) {
       });
   }
 );
-  
+})
 
 function incorectDetails(inputField){
     inputField.addClass('is-invalid')

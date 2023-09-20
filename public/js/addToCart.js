@@ -32,9 +32,7 @@ $(document).ready(function () {
 
       axios.post("/cart/add", formDataObject)
         .then(response => {
-          colorField.val(colorField.find("option:first").val());
-          sizeField.val(sizeField.find("option:first").val());
-          userQuantiy.val(1);
+          location.reload(),
 
           successDiv.removeClass('d-none');
           setTimeout(() => {

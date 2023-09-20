@@ -1,29 +1,31 @@
 
 //client side authentication script for register page
-$('#signupForm').on('submit', function(e){
+$(document).ready(function(){
+    $('#signupForm').on('submit', function (e) {
 
-    //Checck firs tname validity.
-    const fName = $('input[name="fname"]');
-    checkNoValue(fName, e);
-
-    //Checck last name validity.
-    const lName = $('input[name="lname"]');
-    checkNoValue(lName, e);
-
-    //Checck Phone validity.
-    const phone = $('input[name="phone"]');
-    checkPhoneValue(phone, e);
-
-    //Checck Email validity.
-    const email = $('input[name="email"]');
-    checkEmailValue(email, e);
-
-    //Checck Password validity.
-    const password = $('input[name="password"]');
-    checkNoValue(password, e);
-
-    //this is to stop form submission while testing
-    //e.preventDefault();
+        //Checck firs tname validity.
+        const fName = $('input[name="fname"]');
+        checkNoValue(fName, e);
+    
+        //Checck last name validity.
+        const lName = $('input[name="lname"]');
+        checkNoValue(lName, e);
+    
+        //Checck Phone validity.
+        const phone = $('input[name="phone"]');
+        checkPhoneValue(phone, e);
+    
+        //Checck Email validity.
+        const email = $('input[name="email"]');
+        checkEmailValue(email, e);
+    
+        //Checck Password validity.
+        const password = $('input[name="password"]');
+        checkNoValue(password, e);
+    
+        //this is to stop form submission while testing
+        //e.preventDefault();
+    });
 });
 
 
