@@ -348,22 +348,27 @@ app.route('/cart/add')
 app.route('/cart/remove')
   .post((req, res) => {
 
-    //get and store the object coming from user in a variable
 
-    //get the existing cart from user
-    /*if cart exists{
-      push the new item into cart
-      send the updated cookie back to user
-    }
-    else{
-      create the cart
-      push the new item into cart
-      send the updated cookie back to user
-    }
+  });
+
+
+app.route('/cart/update')
+  .patch((req, res) => {
+    const { newQuantity, productId, entryId } = req.body;
+
+    const sql = 'UPDATE cart_items SET quantity = ? WHERE product_id = ? AND entry_id = ?';
+    const values = [newQuantity, productId, entryId];
     
-    */
+    connection.query(sql, values, (error, results, fields) => {
+      if (error) {
+        // Handle the error gracefully, send an appropriate error response
+        console.error(error);
+        return res.status(500).json({ error: 'Database error' });
+      }
 
-
+      // Redirect to the cart page when the update is successful
+      return res.status(200).json({ message: 'Quantity updated successfully' });
+    });
   });
 
 // -- Global Cart Function
