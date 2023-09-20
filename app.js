@@ -390,32 +390,51 @@ app.route('/signup')
   })
   .post((req, res) => {
     const { fname, lname, email, password, phone } = req.body;
-
-    // Hash the password
-    bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send("Error hashing password");
-        return;
-      }
-
-      // Store the user in the database
-      connection.query(
-        'INSERT INTO customers (customer_first_name, customer_last_name, email, phone, password) VALUES (?,?,?,?,?)',
-        [fname, lname, email, phone, hashedPassword],
-        (error, results) => {
-          if (error) {
-            console.log(error);
-            res.status(500).send("Error registering user");
-            return;
-          }
-          const message = "User registered successfully";
-          // Registration successful
-          res.redirect(`/login?message=${message}`);
-          //res.status(200).send("User registered successfully");
+    
+    // Check if the email already exists
+    connection.query(
+      'SELECT * FROM customers WHERE email = ?',
+      [email],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(500).send("Error checking email existence");
+          return;
         }
-      );
-    });
+
+        if (results.length > 0) {
+          // Email already exists in the database
+          const message = "Email already exists. Please use a different email.";
+          res.redirect(`/signup?message=${encodeURIComponent(message)}`);
+        } else {
+          // Email is unique, proceed with user registration
+          // Hash the password
+          bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+            if (err) {
+              console.log(err);
+              res.status(500).send("Error hashing password");
+              return;
+            }
+
+            // Store the user in the database
+            connection.query(
+              'INSERT INTO customers (customer_first_name, customer_last_name, email, phone, password) VALUES (?,?,?,?,?)',
+              [fname, lname, email, phone, hashedPassword],
+              (insertError, insertResults) => {
+                if (insertError) {
+                  console.log(insertError);
+                  res.status(500).send("Error registering user");
+                  return;
+                }
+                const message = "User registered successfully";
+                // Registration successful
+                res.redirect(`/login?message=${encodeURIComponent(message)}`);
+              }
+            );
+          });
+        }
+      }
+    );
   });
 
 

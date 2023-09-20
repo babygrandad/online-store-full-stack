@@ -20,7 +20,7 @@ $('#signupForm').on('submit', function(e){
 
     //Checck Password validity.
     const password = $('input[name="password"]');
-    checkNoValue(lName, e);
+    checkNoValue(password, e);
 
     //this is to stop form submission while testing
     //e.preventDefault();
@@ -28,7 +28,7 @@ $('#signupForm').on('submit', function(e){
 
 
 function checkNoValue(inputField, e) {
-    if (!inputField.val()) {
+    if (!inputField.val().trim()) {
         $(inputField).addClass('is-invalid');
         e.preventDefault();
     } else {
@@ -37,7 +37,7 @@ function checkNoValue(inputField, e) {
 };
 
 function checkPhoneValue(inputField, e) {
-    var value = inputField.val();
+    var value = inputField.val().trim();
 
     if (!/^0\d{9}$/.test(value)) {
         inputField.addClass('is-invalid');
@@ -48,7 +48,7 @@ function checkPhoneValue(inputField, e) {
 }
 
 function checkEmailValue(inputField, e) {
-    var value = inputField.val();
+    var value = inputField.val().trim();
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(value)) {
