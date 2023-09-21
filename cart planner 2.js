@@ -51,7 +51,7 @@ function cartLogicSecond() {
 
             // Handle response here
             res
-                .cookie("cart", cart, { maxAge: 3600000 })
+                .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
                 .status(200)
                 .send(`Login Successful`);
         } catch (error) {
@@ -147,7 +147,7 @@ function cartLogicSecond() {
         console.log(cart);
 
         res
-            .cookie("cart", cart, { maxAge: 3600000 })
+            .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
             .status(200)
             .send(`Login Successful`);
     }
@@ -178,7 +178,7 @@ function cartLogicSecond() {
         console.log(cart);
 
         res
-            .cookie("cart", cart, { maxAge: 3600000 })
+            .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
             .status(200)
             .send(`Login Successful`);
     }
@@ -204,7 +204,7 @@ function cartLogicSecond() {
         console.log(cart);
 
         res
-            .cookie("cart", cart, { maxAge: 3600000 })
+            .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
             .status(200)
             .send(`Login Successful`);
     }
@@ -314,7 +314,7 @@ async function newCartToDB(req, res, cart, connection) {
 
         // Handle response here
         res
-            .cookie("cart", cart, { maxAge: 3600000 })
+            .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
             .status(200)
             .send(`Cart saved for ${determineUser()}.`);
     } catch (error) {
@@ -351,7 +351,7 @@ async function updateGuestCartInDB(req, res, cart, connection) {
 
         // Handle response here
         res
-            .cookie("cart", cart, { maxAge: 3600000 })
+            .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
             .status(200)
             .send(`Cart saved for Guest.`);
     } catch (error) {
@@ -387,7 +387,7 @@ async function updateAuthCartInDB(req, res, cart, connection) {
 
         // Handle response here
         res
-            .cookie("cart", cart, { maxAge: 3600000 })
+            .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
             .status(200)
             .send(`Cart saved for ${userID}.`);
     } catch (error) {

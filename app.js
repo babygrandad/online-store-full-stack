@@ -261,7 +261,7 @@ app.route('/cart/add')
 
         // Handle response here
         res
-          .cookie("cart", cart, { maxAge: 3600000 })
+          .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
           .status(200)
           .send(`Cart saved for ${determineUser()}.`);
       } catch (error) {
@@ -298,7 +298,7 @@ app.route('/cart/add')
 
         // Handle response here
         res
-          .cookie("cart", cart, { maxAge: 3600000 })
+          .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
           .status(200)
           .send(`Cart saved for Guest.`);
       } catch (error) {
@@ -334,7 +334,7 @@ app.route('/cart/add')
 
         // Handle response here
         res
-          .cookie("cart", cart, { maxAge: 3600000 })
+          .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
           .status(200)
           .send(`Cart saved for ${userID}.`);
       } catch (error) {
@@ -389,7 +389,7 @@ app.route('/cart/remove')
 
           // Respond with a success message indicating the item removal, 'modified' update, and total quantity
           return res
-            .cookie("cart", cart, { maxAge: 3600000 })
+            .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
             .status(200)
             .json({ message: 'Item removed from cart, modified timestamp updated, and total quantity calculated successfully' });
         });
@@ -463,7 +463,7 @@ app.route('/cart/update')
                       cart.sumQuantity = totalQuantity;
                       console.log(cart);
                       return res
-                        .cookie("cart", cart, { maxAge: 3600000 })
+                        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
                         .status(200)
                         .send('Item removed from cart and modified timestamp updated successfully');
                     }
@@ -592,7 +592,7 @@ app.route('/login')
 
         // Handle response here
         res
-          .cookie("cart", cart, { maxAge: 3600000 })
+          .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
           .status(200)
           .send(`Login Successful`);
       } catch (error) {
@@ -688,7 +688,7 @@ app.route('/login')
       console.log(cart);
 
       res
-        .cookie("cart", cart, { maxAge: 3600000 })
+        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
         .status(200)
         .send(`Login Successful`);
     }
@@ -719,7 +719,7 @@ app.route('/login')
       console.log(cart);
 
       res
-        .cookie("cart", cart, { maxAge: 3600000 })
+        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
         .status(200)
         .send(`Login Successful`);
     }
@@ -745,7 +745,7 @@ app.route('/login')
       console.log(cart);
 
       res
-        .cookie("cart", cart, { maxAge: 3600000 })
+        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
         .status(200)
         .send(`Login Successful`);
     }

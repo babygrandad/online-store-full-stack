@@ -62,7 +62,7 @@ app.route('/cart/update')
                       cart.sumQuantity = totalQuantity;
                       console.log(cart);
                       return res
-                        .cookie("cart", cart, { maxAge: 3600000 })
+                        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
                         .status(200)
                         .send('Item removed from cart and modified timestamp updated successfully');
                     }

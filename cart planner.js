@@ -23,7 +23,7 @@ function prevVersions() {
   //   }
 
   //   function responseWithCookie(res, cart, user) {
-  //     res.cookie('cart', cart, { maxAge: 3600000 })
+  //     res.cookie('cart', cart, { expires: new Date(new Date().getTime() + 3600000) })
   //       .status(200).send(`Cart saved for ${user}.`)
   //   }
 
@@ -199,7 +199,7 @@ function prevVersions() {
   //   }
 
   //   function responseWithCookie(res, cart, user) {
-  //     res.cookie('cart', cart, { maxAge: 3600000 })
+  //     res.cookie('cart', cart, { expires: new Date(new Date().getTime() + 3600000) })
   //       .status(200).send(`Cart saved for ${user}.`)
   //   }
 
@@ -370,7 +370,7 @@ function prevVersions() {
   //           }
   //         }
   //         res
-  //           .cookie("cart", cart, { maxAge: 3600000 })
+  //           .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
   //           .status(200)
   //           .send(`Cart saved for ${determineUser()}.`);
   //       }
@@ -501,7 +501,7 @@ function prevVersions() {
 
   //       // Handle response here
   //       res
-  //         .cookie("cart", cart, { maxAge: 3600000 })
+  //         .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
   //         .status(200)
   //         .send(`Cart saved for ${determineUser()}.`);
   //     } catch (error) {
@@ -567,7 +567,7 @@ function prevVersions() {
   //           }
   //         }
   //         res
-  //           .cookie("cart", cart, { maxAge: 3600000 })
+  //           .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
   //           .status(200)
   //           .send(`Cart saved for ${determineUser()}.`);
   //       }
@@ -699,7 +699,7 @@ function version4Updating() {
 
       // Handle response here
       res
-        .cookie("cart", cart, { maxAge: 3600000 })
+        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
         .status(200)
         .send(`Cart saved for ${determineUser()}.`);
     } catch (error) {
@@ -734,7 +734,7 @@ function version4Updating() {
 
       // Handle response here
       res
-        .cookie("cart", cart, { maxAge: 3600000 })
+        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
         .status(200)
         .send(`Cart saved for ${determineUser()}.`);
     } catch (error) {
@@ -769,7 +769,7 @@ function version4Updating() {
 
       // Handle response here
       res
-        .cookie("cart", cart, { maxAge: 3600000 })
+        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
         .status(200)
         .send(`Cart saved for ${determineUser()}.`);
     } catch (error) {
