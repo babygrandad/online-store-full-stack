@@ -59,5 +59,4 @@ $('.image-color-changer').on('click', function(){
     var card = $(this).closest('.item-wrapper');
     var cardImage = card.find('.item-image');
     cardImage.attr('src', newImage);
-    console.log(newImage)
 });

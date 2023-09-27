@@ -134,10 +134,11 @@ td:last-child, th:last-child{
      display: flex;
      align-items: center;
      justify-content: center;
-     height: 40px;
-     width: 40px;
+     height: 30px;
+     width: 30px;
      padding: 5px;
-     margin: 5px;
+     margin-right: 10px;
+     margin-bottom: 10px;
      border-radius: 50%;
      box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
 }
