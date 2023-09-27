@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 14, 2023 at 01:52 PM
+-- Generation Time: Sep 27, 2023 at 03:09 PM
 -- Server version: 8.1.0
 -- PHP Version: 7.4.3-4ubuntu2.19
 
@@ -54,6 +54,17 @@ CREATE TABLE `carts` (
   `modified` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`cart_id`, `user_id`, `created`, `modified`) VALUES
+('10be8e58-67d9-4a22-af78-a3369eb6a4ed', 'melik@password.com', 1695149160068, 1695149160068),
+('1370eb37-e001-48ae-8968-44fb5a3ce91e', 'Guest : 0510bbd0-04f9-47f7-a561-956bf6026437', 1695281957961, 1695282065260),
+('25fdcf37-bd49-4ed1-b364-88f8d63b9ee6', 'alpha@a2g.com', 1695152425287, 1695152425287),
+('8730e0e9-b654-4d6e-802c-5a797bedb236', 'anatov@654321.com', 1695148378678, 1695224258587),
+('f265a37d-caa8-418f-bae3-2f5114409fef', 'larry@gmail.com', 1695151227840, 1695151227840);
+
 -- --------------------------------------------------------
 
 --
@@ -85,6 +96,16 @@ CREATE TABLE `cart_items` (
   `size` int DEFAULT NULL,
   `quantity` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `cart_items`
+--
+
+INSERT INTO `cart_items` (`entry_id`, `cart_id`, `product_id`, `color`, `size`, `quantity`) VALUES
+(1695224351479, '10be8e58-67d9-4a22-af78-a3369eb6a4ed', 11, 'Gold', 5, 1),
+(1695281957609, '1370eb37-e001-48ae-8968-44fb5a3ce91e', 11, 'Gold', 4, 1),
+(1695281981643, '1370eb37-e001-48ae-8968-44fb5a3ce91e', 11, 'Mint Green', 4, 1),
+(1695282037638, '1370eb37-e001-48ae-8968-44fb5a3ce91e', 4, 'Ash', 10, 1);
 
 -- --------------------------------------------------------
 
@@ -199,7 +220,11 @@ CREATE TABLE `customers` (
 INSERT INTO `customers` (`customer_id`, `customer_first_name`, `customer_last_name`, `email`, `phone`, `password`) VALUES
 (1, 'Ricky', 'Chavez', 'me@123456.com', '0721234567', '$2b$10$0IrPrwXYQTtFukCMRNzg8.VOi1YxQmZUxcHgEKzaFn7rpMzfZ7Kja'),
 (2, 'Melik', 'Ratazschlovska', 'melik@password.com', '0123456789', '$2b$10$GmtELj81xRTrFWlT9CQRS.WEFdDd2tc6UWVrGqKCpvqVqlUDgPGK6'),
-(3, 'Anatov', 'Brazashlava', 'anatov@654321.com', '071456123', '$2b$10$kBbez1oK2PsOfceqL8Bzi.FhNKq5GLZTbGHj9/vLKtZHHTa86st0y');
+(3, 'Anatov', 'Brazashlava', 'anatov@654321.com', '071456123', '$2b$10$kBbez1oK2PsOfceqL8Bzi.FhNKq5GLZTbGHj9/vLKtZHHTa86st0y'),
+(13, 'jerry ', 'sontonga', 'larry@gmail.com', '0736142507', '$2b$10$mqtNcVxZUtqyUuUWu0zGQ.BbWNsb5LeFaWq25Ni0oQ5629ahuCVt2'),
+(14, 'Alphonzo', 'Perdido', 'alpha@a2g.com', '0157894633', '$2b$10$7o5g8hXEU/SB.QwXLP7PguJcpMNOyolTHUsLQwKXdmxWzynwcgXh6'),
+(15, 'wend ', 'shoul', 'a@b.com', '0123456789', '$2b$10$USTUN7f5VJXTLCM/1IKyV.Of86V3Um6YV9i.XmBRdzRy.9eRwDlqO'),
+(16, 'palesa', 'madimabe', 'a@b.com', '0123456789', '$2b$10$77c96K.hAppweYnlGQ9MkOSMw8sVcuO5MdLHgNvabv.apW6NYg0FC');
 
 -- --------------------------------------------------------
 
@@ -622,7 +647,7 @@ CREATE TABLE `temp_shoe_colors` (
 --
 DROP TABLE IF EXISTS `all_shoes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `all_shoes`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, `products`.`product_description` AS `product_description`, `products`.`price` AS `price`, `products`.`quantity` AS `quantity`, `products`.`new` AS `new`, `products`.`featured` AS `featured`, (select json_arrayagg(`sizes`.`size`) from (`product_sizes` left join `sizes` on((`product_sizes`.`size_id` = `sizes`.`size_id`))) where (`product_sizes`.`product_id` = `products`.`product_id`)) AS `sizes`, (select json_arrayagg(`genders`.`gender`) from (`product_genders` left join `genders` on((`product_genders`.`gender_id` = `genders`.`gender_id`))) where (`product_genders`.`product_id` = `products`.`product_id`)) AS `genders`, (select json_arrayagg(json_object('color_name',`colors`.`color_name`,'color_hex',`colors`.`color_hex`)) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors`, (select json_arrayagg(`categories`.`category_name`) from (`product_categories` left join `categories` on((`product_categories`.`category_id` = `categories`.`category_id`))) where (`product_categories`.`product_id` = `products`.`product_id`)) AS `categories` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name`, `products`.`product_description`, `products`.`price`, `products`.`quantity`, `products`.`new`, `products`.`featured` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`babygrandad`@`%` SQL SECURITY DEFINER VIEW `all_shoes`  AS SELECT `products`.`product_id` AS `product_id`, `products`.`product_name` AS `product_name`, `products`.`product_description` AS `product_description`, `products`.`price` AS `price`, `products`.`quantity` AS `quantity`, `products`.`new` AS `new`, `products`.`featured` AS `featured`, (select json_arrayagg(`sizes`.`size`) from (`product_sizes` left join `sizes` on((`product_sizes`.`size_id` = `sizes`.`size_id`))) where (`product_sizes`.`product_id` = `products`.`product_id`)) AS `sizes`, (select json_arrayagg(`genders`.`gender`) from (`product_genders` left join `genders` on((`product_genders`.`gender_id` = `genders`.`gender_id`))) where (`product_genders`.`product_id` = `products`.`product_id`)) AS `genders`, (select json_arrayagg(json_object('color_name',`colors`.`color_name`,'color_hex',`colors`.`color_hex`,'group_color',`colors`.`group_color`)) from (`product_colors` left join `colors` on((`product_colors`.`color_id` = `colors`.`color_id`))) where (`product_colors`.`product_id` = `products`.`product_id`)) AS `colors`, (select json_arrayagg(`categories`.`category_name`) from (`product_categories` left join `categories` on((`product_categories`.`category_id` = `categories`.`category_id`))) where (`product_categories`.`product_id` = `products`.`product_id`)) AS `categories` FROM `products` GROUP BY `products`.`product_id`, `products`.`product_name`, `products`.`product_description`, `products`.`price`, `products`.`quantity`, `products`.`new`, `products`.`featured` ;
 
 -- --------------------------------------------------------
 
@@ -732,7 +757,7 @@ ALTER TABLE `colors`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `customer_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `genders`
