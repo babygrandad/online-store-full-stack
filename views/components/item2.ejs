@@ -1,4 +1,11 @@
-<div class="col-sm-6 col-lg-4 py-3">
+<div class="col-sm-6 col-lg-4 py-3 shoe-component"
+    data-product-name="<%= shoe.product_name %>"
+    data-size="<%= JSON.stringify(shoe.sizes) %>"
+    data-color-names='[<%= shoe.colors.map(color => JSON.stringify(color.color_name)).join(', ') %>]'
+    data-group-colors='[<%= shoe.colors.map(color => JSON.stringify(color.group_color)).join(', ') %>]'
+    data-gender="<%= JSON.stringify(shoe.genders) %>"
+    data-price="<%= shoe.price %>"
+    data-category="<%= JSON.stringify(shoe.categories) %>">
     <div class="item-wrapper p-3 shadows">
         <a href="/products/<%= shoe.product_id %>" class="pointer-link">
             <img src="/assets/images/shoes/<%= shoe.product_id %> - <%= shoe.colors[0].color_name %>.png
