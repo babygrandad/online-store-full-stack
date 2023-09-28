@@ -12,16 +12,18 @@ function clearAllFilters() {
 
 // Function to filter products by color
 function filterProductsByColor(color) {
-    $('.shoe-component').each(function () {
-        const groupColors = $(this).data('group-colors');
+  $('.shoe-component').each(function () {
+    const groupColors = $(this).data('group-colors');
 
-        // Check if the selected color is in the product's colors array
-        if (groupColors.includes(color)) {
-            $(this).show(); // Show the product
-        } else {
-            $(this).hide(); // Hide the product
-        }
-    });
+    // Check if the selected color is in the product's colors array
+    if (groupColors.includes(color)) {
+      $(this).show(); // Show the product
+    } else if (color === "all") {
+      $('.shoe-component').show(); // Show all products
+    } else {
+      $(this).hide(); // Hide the product
+    }
+  });
 }
 
 // Function to filter products by gender
