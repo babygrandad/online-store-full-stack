@@ -1,13 +1,13 @@
 $(document).ready(function () {
 
-
+  
 
 
 });
 
 // Function to show all products
 function clearAllFilters() {
-    $('.shoe-component').show(); // Show all products
+  $('.shoe-component').show(); // Show all products
 }
 
 // Function to filter products by color
@@ -36,10 +36,41 @@ function filterProductsByGender(gender) {
       $(this).show();
     } else if (genders.includes(gender)) {
       $(this).show(); // Show the product
-    }else if(gender === 'All'){
+    } else if (gender === 'All') {
       $('.shoe-component').show(); // Show all products
     } else {
       $(this).hide(); // Hide the product
     }
   });
 }
+
+// Function to sort products by price
+function SortProductsByPrice(sortValue) {
+  const $prices = $('.shoe-component');
+
+  // Create an array to store the original order of elements
+  const originalOrder = $prices.toArray();
+
+  $prices.detach().sort(function (a, b) {
+    const priceA = parseFloat($(a).data('price'));
+    const priceB = parseFloat($(b).data('price'));
+
+    if (sortValue === 'high') {
+      return priceB - priceA; // Sort high to low
+    } else if (sortValue === 'low') {
+      return priceA - priceB; // Sort low to high
+    } else {
+      // Sort by the original order when "None" is selected
+      return originalOrder.indexOf(a) - originalOrder.indexOf(b);
+    }
+  }).appendTo('.shoe-component-container');
+}
+// Event listener for radio buttons
+$("input[name='sortingOptions']").change(function () {
+  const selectedSortOption = $("input[name='sortingOptions']:checked").val();
+  SortProductsByPrice(selectedSortOption);
+});
+
+
+
+
