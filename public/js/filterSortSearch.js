@@ -1,9 +1,34 @@
 $(document).ready(function () {
+  // Get references to the search input field and the shoe-component-container elements
+  const searchInput = $('#shoe-search');
+  const shoeComponents = $('.shoe-component');
 
-  
+  // Add an event listener to the form's submit event
+  $('#shoe-search-form').on('submit', function (e) {
+    e.preventDefault(); // Prevent the default form submission behavior
+    console.log('Form Submitted')
+  });
+
+  // Add an event listener to the input field
+  searchInput.on('input', function () {
+    const searchQuery = $(this).val().toLowerCase().trim();
+    console.log('Query Submitted: ', searchQuery)
+    shoeComponents.each(function () {
+      const productName = ($(this).data('product-name') || '').toLowerCase();
+      console.log('product Name: ', productName)
+      // Check if the search query is empty or if the name contains the query
+      if (searchQuery === '' || productName.includes(searchQuery)) {
+        $(this).show(); // Show the shoe-component-container
+      } else {
+        $(this).hide(); // Hide the shoe-component-container
+      }
+    });
+  });
 
 
 });
+
+
 
 // Function to show all products
 function clearAllFilters() {
