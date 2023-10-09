@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    resetValidationClasses();
+
     const fNameField = $('input[name="fname"]');
     const lNameField = $('input[name="lname"]');
     const phoneField = $('input[name="phone"]');
