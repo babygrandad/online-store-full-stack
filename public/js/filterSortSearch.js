@@ -1,3 +1,5 @@
+var resultingArray = []
+
 $(document).ready(function () {
   // Get references to the search input field and the shoe-component-container elements
   const searchInput = $('#shoe-search');
@@ -12,10 +14,8 @@ $(document).ready(function () {
   // Add an event listener to the input field
   searchInput.on('input', function () {
     const searchQuery = $(this).val().toLowerCase().trim();
-    console.log('Query Submitted: ', searchQuery)
     shoeComponents.each(function () {
       const productName = ($(this).data('product-name') || '').toLowerCase();
-      console.log('product Name: ', productName)
       // Check if the search query is empty or if the name contains the query
       if (searchQuery === '' || productName.includes(searchQuery)) {
         $(this).show(); // Show the shoe-component-container
@@ -25,14 +25,18 @@ $(document).ready(function () {
     });
   });
 
+  // Attach change event handlers to the checkboxes
+  $('input[name="checkCategory"]').change(syncCheckboxes);
 
 });
-
 
 
 // Function to show all products
 function clearAllFilters() {
   $('.shoe-component').show(); // Show all products
+  
+  $('input[name="checkCategory"]').prop('checked', true);
+  updateResultingArray();
 }
 
 // Function to filter products by color
@@ -71,12 +75,12 @@ function filterProductsByGender(gender) {
 
 // Function to sort products by price
 function SortProductsByPrice(sortValue) {
-  const $prices = $('.shoe-component');
+  const prices = $('.shoe-component');
 
   // Create an array to store the original order of elements
-  const originalOrder = $prices.toArray();
+  const originalOrder = prices.toArray();
 
-  $prices.detach().sort(function (a, b) {
+  prices.detach().sort(function (a, b) {
     const priceA = parseFloat($(a).data('price'));
     const priceB = parseFloat($(b).data('price'));
 
@@ -90,12 +94,47 @@ function SortProductsByPrice(sortValue) {
     }
   }).appendTo('.shoe-component-container');
 }
-// Event listener for radio buttons
+// Event listener for price radio buttons
 $("input[name='sortingOptions']").change(function () {
   const selectedSortOption = $("input[name='sortingOptions']:checked").val();
   SortProductsByPrice(selectedSortOption);
 });
 
+// Function to syncronise checkboxes on big and small screen
+function syncCheckboxes() {
+  var clickedValue = $(this).val();
+  $('input[name="checkCategory"][value="' + clickedValue + '"]').prop('checked', $(this).prop('checked'));
 
+  // Update the resulting array
+  updateResultingArray();
+
+  // Call the function to filter products by category
+  filterProductsByCategory();
+}
+
+// Function to update the resulting array
+function updateResultingArray() {
+  var selectedCheckboxes = $('input[name="checkCategory"]:checked');
+  resultingArray = selectedCheckboxes.map(function () {
+    return $(this).val();
+  }).get();
+
+  // Display the resulting array (you can customize this part)
+  console.log(resultingArray);
+}
+
+// Function to filter products by category
+function filterProductsByCategory() {
+  $('.shoe-component').each(function () {
+    const categories = $(this).data('category');
+
+    // Check if at least one of the selected categories is in the product's category array
+    if (categories.some(category => resultingArray.includes(category))) {
+      $(this).show(); // Show the product
+    } else {
+      $(this).hide(); // Hide the product
+    }
+  });
+}
 
 
