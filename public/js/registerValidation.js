@@ -1,31 +1,53 @@
+$(document).ready(function () {
 
-//client side authentication script for register page
-$(document).ready(function(){
+    const fNameField = $('input[name="fname"]');
+    const lNameField = $('input[name="lname"]');
+    const phoneField = $('input[name="phone"]');
+    const emailField = $('input[name="email"]');
+    const passwordField = $('input[name="password"]');
+
     $('#signupForm').on('submit', function (e) {
 
-        //Checck firs tname validity.
-        const fName = $('input[name="fname"]');
-        checkNoValue(fName, e);
-    
-        //Checck last name validity.
-        const lName = $('input[name="lname"]');
-        checkNoValue(lName, e);
-    
-        //Checck Phone validity.
-        const phone = $('input[name="phone"]');
-        checkPhoneValue(phone, e);
-    
-        //Checck Email validity.
-        const email = $('input[name="email"]');
-        checkEmailValue(email, e);
-    
-        //Checck Password validity.
-        const password = $('input[name="password"]');
-        checkNoValue(password, e);
-    
-        //this is to stop form submission while testing
-        //e.preventDefault();
+        // Check first name validity and store the value
+        checkNoValue(fNameField, e);
+
+        // Check last name validity and store the value
+        checkNoValue(lNameField, e);
+
+        // Check Phone validity and store the value
+        checkPhoneValue(phoneField, e);
+
+        // Check Email validity and store the value
+        checkEmailValue(emailField, e);
+
+        // Check Password validity and store the value
+        checkNoValue(passwordField, e);
     });
+
+    // Function to reset validation classes
+    function resetValidationClasses() {
+        $('input').removeClass('is-valid is-invalid');
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let message = urlParams.get('message');
+
+    const alertMessage = $('#alertMessage');
+
+    if (message) {
+        alertMessage.text(message);
+        alertMessage.show(); // Show the alert
+    }
+
+    const errorAlert = $('#error-alert');
+    const statusCode = errorAlert.data('status');
+    console.log(statusCode);
+
+    if (statusCode == 409) {
+        emailField.addClass('is-invalid').removeClass('is-valid');
+    }
+
+
 });
 
 

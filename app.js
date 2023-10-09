@@ -499,11 +499,13 @@ async function getCartSumQuantity(identifier, connection) {
 //sign up routes
 app.route('/signup')
   .get((req, res) => {
-    res.render('signup', { pageTitle: "signup" })
+    // Get the error message from the query parameter, if any
+    const errorMessage = req.query.message || '';
+    res.render('signup', { pageTitle: 'signup', errorMessage });
   })
   .post((req, res) => {
     const { fname, lname, email, password, phone } = req.body;
-    
+
     // Check if the email already exists
     connection.query(
       'SELECT * FROM customers WHERE email = ?',
@@ -511,21 +513,24 @@ app.route('/signup')
       (error, results) => {
         if (error) {
           console.log(error);
-          res.status(500).send("Error checking email existence");
+          const errorMessage = "Error checking email existence";
+          res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone });
           return;
         }
 
         if (results.length > 0) {
           // Email already exists in the database
-          const message = "Email already exists. Please use a different email.";
-          res.redirect(`/signup?message=${encodeURIComponent(message)}`);
+          const errorMessage = "Email already exists. Please use a different email.";
+          console.log(  'Error: ',errorMessage , fname, lname, email, phone );
+          res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone, statusCode: 409 });
         } else {
           // Email is unique, proceed with user registration
           // Hash the password
           bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
             if (err) {
               console.log(err);
-              res.status(500).send("Error hashing password");
+              const errorMessage = "Error hashing password";
+              res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone });
               return;
             }
 
@@ -536,7 +541,8 @@ app.route('/signup')
               (insertError, insertResults) => {
                 if (insertError) {
                   console.log(insertError);
-                  res.status(500).send("Error registering user");
+                  const errorMessage = "Error registering user";
+                  res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone });
                   return;
                 }
                 const message = "User registered successfully";
@@ -549,6 +555,7 @@ app.route('/signup')
       }
     );
   });
+
 
 
 //Login Routes
