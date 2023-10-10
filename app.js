@@ -555,7 +555,12 @@ app.route('/signup')
 //Login Routes
 app.route('/login')
   .get((req, res) => {
-    res.render('login', { pageTitle: "login", message: req.query.message || '' })
+
+    if (req.isAuthenticated()) {
+      res.redirect('/products')
+    } else {
+      res.render('login', { pageTitle: "login", message: req.query.message || '' })
+    }
   })
   .post((req, res, next) => {
 
@@ -789,6 +794,15 @@ app.route('/login')
       });
     })(req, res, next);
   });
+
+
+  
+// Logout Route
+app.get('/logout', (req, res) => {
+  req.logout(); 
+  res.clearCookie('cart'); 
+  res.redirect('/login');
+});
 
 
 //Testing Routes
