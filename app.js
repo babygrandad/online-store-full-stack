@@ -493,9 +493,12 @@ async function getCartSumQuantity(identifier, connection) {
 //sign up routes
 app.route('/signup')
   .get((req, res) => {
-    // Get the error message from the query parameter, if any
+    if (req.isAuthenticated()) {
+      res.redirect('/products')
+    } else {
     const errorMessage = req.query.message || '';
     res.render('signup', { pageTitle: 'signup', errorMessage });
+    }
   })
   .post((req, res) => {
     const { fname, lname, email, password, phone } = req.body;
