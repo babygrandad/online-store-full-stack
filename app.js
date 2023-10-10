@@ -160,12 +160,6 @@ app.route('/products/:shoeID')
     });
   });
 
-app.route('/categories')
-  .get((req, res) => {
-    res.render('categories', { pageTitle: "categories" })
-  });
-
-
 //Cart routes 
 app.route('/cart')
   .get((req, res) => {
