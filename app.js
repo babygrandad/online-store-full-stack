@@ -104,18 +104,18 @@ app.route('/')
     connection.query(sql, (error, results, fields) => {
       if (error) throw error;
 
-      res.render('home', { pageTitle: "Home", results: results }); // send the results back to the client
+      res.render('home', { pageTitle: "Home", results: results, isLoggedIn : req.isAuthenticated() }); // send the results back to the client
     });
   });
 
 app.route('/contact')
   .get((req, res) => {
-    res.render('contact', { pageTitle: "Contact" })
+    res.render('contact', { pageTitle: "Contact", isLoggedIn : req.isAuthenticated() })
   });
 
 app.route('/about')
   .get((req, res) => {
-    res.render('about', { pageTitle: "about" })
+    res.render('about', { pageTitle: "about", isLoggedIn : req.isAuthenticated() })
   });
 
 
@@ -140,7 +140,8 @@ app.route('/products')
             pageTitle: "Shop",
             results: results,
             categoryResults: categoryResults,
-            groupColorResults: groupColorResults
+            groupColorResults: groupColorResults,
+            isLoggedIn : req.isAuthenticated()
           });
         });
       });
@@ -156,7 +157,7 @@ app.route('/products/:shoeID')
     connection.query(sql, (error, results, fields) => {
       if (error) throw error;
 
-      res.render('product', { pageTitle: results[0].product_name, shoe: results }); // send the results back to the client
+      res.render('product', { pageTitle: results[0].product_name, shoe: results, isLoggedIn : req.isAuthenticated() }); // send the results back to the client
     });
   });
 
@@ -172,7 +173,7 @@ app.route('/cart')
       connection.query(selectSQl, (error, results, fields) => {
         if (error) throw error;
   
-        res.render('cart', { pageTitle: "Cart", results: results }); // send the results back to the client
+        res.render('cart', { pageTitle: "Cart", results: results, isLoggedIn : req.isAuthenticated() }); // send the results back to the client
       })
     }else{
       let results = []
@@ -497,7 +498,7 @@ app.route('/signup')
       res.redirect('/products')
     } else {
     const errorMessage = req.query.message || '';
-    res.render('signup', { pageTitle: 'signup', errorMessage });
+    res.render('signup', { pageTitle: 'signup', errorMessage, isLoggedIn : req.isAuthenticated() });
     }
   })
   .post((req, res) => {
@@ -562,7 +563,7 @@ app.route('/login')
     if (req.isAuthenticated()) {
       res.redirect('/products')
     } else {
-      res.render('login', { pageTitle: "login", message: req.query.message || '' })
+      res.render('login', { pageTitle: "login", message: req.query.message || '' , isLoggedIn : req.isAuthenticated()})
     }
   })
   .post((req, res, next) => {
@@ -798,24 +799,26 @@ app.route('/login')
     })(req, res, next);
   });
 
-
-  
 // Logout Route
-app.get('/logout', (req, res) => {
-  req.logout(); 
-  res.clearCookie('cart'); 
-  res.redirect('/login');
+app.post('/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    
+    // Clear the 'cart' cookie
+    res.clearCookie('cart');
+    
+    // Redirect the user to the home page after logout
+    res.redirect('/login');
+  });
 });
 
 
 //Testing Routes
 app.route('/test')
   .get((req, res) => {
-    if (req.isAuthenticated()) {
-      res.render('test', { pageTitle: "Successful Login" })
-    } else {
-      res.redirect('/login');
-    }
+   res.send()
   });
 
 app.listen(3000, function () {

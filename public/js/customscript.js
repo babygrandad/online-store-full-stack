@@ -2,7 +2,7 @@
 //---- Jquery code ---- \\
 
 // code to control the increase and decrease of quanty 
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Function to increase the quantity
     function stepUp() {
@@ -24,7 +24,7 @@ $(document).ready(function() {
 
     // Event listener for input constraint
     const userQuantity = $('#user-quantity');
-    userQuantity.on('keyup', function() {
+    userQuantity.on('keyup', function () {
         if (userQuantity.val() > 5) {
             userQuantity.val(5);
         }
@@ -41,20 +41,34 @@ $(document).ready(function() {
             .map(cookie => cookie.split('='))
             .reduce((accumulator, [key, value]) => ({ ...accumulator, [key.trim()]: decodeURIComponent(value) }), {});
 
-            const cookieValue = cookies.cart.substring(2);
-            const decodedCartValue = decodeURIComponent(cookieValue);
-            const cartData = JSON.parse(decodedCartValue);
-            $('#cartCount').text(cartData.sumQuantity || '0')
-    } else{
+        const cookieValue = cookies.cart.substring(2);
+        const decodedCartValue = decodeURIComponent(cookieValue);
+        const cartData = JSON.parse(decodedCartValue);
+        $('#cartCount').text(cartData.sumQuantity || '0')
+    } else {
         $('#cartCount').text('0')
     }
+
+    $('.logout-link').on('click', function (event) {
+        event.preventDefault(); // Prevent the default behavior of navigating to a new page
+
+        axios.post('/logout')
+      .then(function (response) {
+        if (response) {
+            
+          window.location.href = response.request.responseURL;
+        }
+      })
+      .catch(function (error) {
+        console.error('Logout error:', error);
+      });
+    });
+
 });
 
 
-
-
 // code to change the colors on the shop page.
-$('.image-color-changer').on('click', function(){
+$('.image-color-changer').on('click', function () {
     var newImage = $(this).data('image');
     var card = $(this).closest('.item-wrapper');
     var cardImage = card.find('.item-image');
