@@ -177,7 +177,7 @@ app.route('/cart')
       })
     }else{
       let results = []
-      res.render('cart', { pageTitle: "Cart", results: results });
+      res.render('cart', { pageTitle: "Cart", results: results, isLoggedIn : req.isAuthenticated() });
     }
     
   });
@@ -526,7 +526,7 @@ app.route('/signup')
           // Email already exists in the database
           const errorMessage = "Email already exists. Please use a different email.";
           console.log(  'Error: ',errorMessage , fname, lname, email, phone );
-          res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone, statusCode: 409 });
+          res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone, statusCode: 409, isLoggedIn : req.isAuthenticated() });
         } else {
           // Email is unique, proceed with user registration
           // Hash the password
