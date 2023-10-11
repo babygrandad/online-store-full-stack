@@ -267,11 +267,11 @@ app.route('/cart/add')
     }
     async function updateGuestCartInDB(req, res, cart, connection) {
       try {
-        const { cartID, updated } = cart;
-
+        const { cartID } = cart;
+        const newUpdate = getNewTime()
         // SQL query 1 (using promise-based API)
         const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
-        const insertCartValues = [updated, cartID];
+        const insertCartValues = [newUpdate, cartID];
         const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
 
 
@@ -284,6 +284,7 @@ app.route('/cart/add')
         try {
           const CartSumQuantity = await getCartSumQuantity(cartID, connection);
           cart.sumQuantity = CartSumQuantity;
+          cart.updated = newUpdate;
         } catch (error) {
           console.error('Error:', error);
         }
@@ -304,11 +305,11 @@ app.route('/cart/add')
     }
     async function updateAuthCartInDB(req, res, cart, connection) {
       try {
-        const { userID, cartID, updated } = cart;
-
+        const { userID, cartID } = cart;
+        const newUpdate = getNewTime()
         // SQL query 1 (using promise-based API)
         const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
-        const insertCartValues = [updated, cartID];
+        const insertCartValues = [newUpdate, cartID];
         const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
 
         // SQL query 2 (using promise-based API)
@@ -320,6 +321,7 @@ app.route('/cart/add')
         try {
           const CartSumQuantity = await getCartSumQuantity(cartID, connection);
           cart.sumQuantity = CartSumQuantity;
+          cart.updated = newUpdate;
         } catch (error) {
           console.error('Error:', error);
         }
@@ -488,6 +490,10 @@ async function getCartSumQuantity(identifier, connection) {
   catch (error) {
     throw error;
   }
+}
+
+function getNewTime(){
+  return new Date().getTime()
 }
 
 
