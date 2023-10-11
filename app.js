@@ -508,8 +508,13 @@ app.route('/signup')
     }
   })
   .post((req, res) => {
-    const { fname, lname, email, password, phone } = req.body;
-
+    var { fname, lname, email, password, phone } = req.body;
+    
+    fname = fname.trim();
+    lname = lname.trim();
+    email = email.trim();
+    password = password.trim();
+    phone = phone.trim();
     // Check if the email already exists
     connection.query(
       'SELECT * FROM customers WHERE email = ?',
@@ -807,6 +812,7 @@ app.route('/login')
 
 // Logout Route
 app.post('/logout', (req, res, next) => {
+  console.log(req.user.customer_first_name, req.user.customer_last_name )
   req.logout((err) => {
     if (err) {
       return next(err);

@@ -64,6 +64,23 @@ $(document).ready(function () {
       });
     });
 
+
+    $('#newsletter').on('submit', function (event){
+        event.preventDefault()
+
+        $(this).find('input').val('');
+
+        alert('We will be in touch.')
+    })
+
+    $('#contact-form').on('submit', function (event){
+        event.preventDefault()
+
+        $(this).find('input').val('');
+        $(this).find('textarea').val('');
+
+        alert('Thanks for reaching out')
+    })
 });
 
 
@@ -73,4 +90,17 @@ $('.image-color-changer').on('click', function () {
     var card = $(this).closest('.item-wrapper');
     var cardImage = card.find('.item-image');
     cardImage.attr('src', newImage);
+});
+
+$('.available-options-wrapper li').click(function () {
+    // Get the selected color and number from the data attributes
+    const selectedColor = $(this).data('color');
+    const selectedNumber = $(this).data('number');
+
+    // Construct the new image source based on the selected color and number
+    const imageSrc = `/assets/images/shoes/${selectedNumber} - ${selectedColor}.png`;
+
+    // Get a reference to the image element and update the source
+    const imageElement = $('.big-product-image');
+    imageElement.attr('src', imageSrc);
 });
