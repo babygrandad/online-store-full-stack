@@ -30,6 +30,13 @@
 
 /* ---------- Top Navigation ---------- */
 
+.nav-logo{
+    max-width: 80px;
+}
+
+.nav-logo-small{
+    max-height: 80px;
+}
 
 
 /* ---------- Homepage ---------- */
@@ -56,10 +63,27 @@
 /* Hero --- */
 /* refactor this code into a class becuase it has sections from 2 pages (about and contact) */
 #about-hero, #unique-quote, #contact-hero{
-    background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("https://cdn.stocksnap.io/img-thumbs/960w/pink%20rose-silver_AB55BXZIXF.jpg");
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("/assets/images/misc/beach.jpeg");
     background-attachment: fixed;
-    color: whitesmoke;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
 }
+
+.emp-name{
+    padding-top: 20px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.emp-title{
+    font-weight: 600;
+}
+
+.emp-discription{
+    font-size: small;
+}
+
 
 /* ---------- Contact-page ---------- */
 /* Map --- */
@@ -312,11 +336,23 @@ input[type=number]::-webkit-outer-spin-button {
     min-width: 120px;
 }
 
+
+
+
+/* ---------- Footer Styling ---------- */
+.footer-logo{
+    max-width: 120px;
+}
+
 /* Start of Media Query for screens with a max width of 600px */
-@media (max-width: 600px) {
+@media (max-width: 767px) {
     /* Hide the paragraphs inside elements with class 'cart-inf' */
     .cart-info b {
       display: none;
+    }
+
+    .nav-link-wrap{
+        min-width: 100%;
     }
   }
   /* End of Media Query */

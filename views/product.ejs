@@ -14,8 +14,8 @@
                         <!-- <h1>Colour selectors here</h1> -->
                         <span>Colours</span>
                         <ul class="available-options-wrapper color-wrapper final-item-picker justify-content-center">
-                            <%shoe[0].colors.forEach((hex) => {%>
-                                <li style="background-color: <%= hex.color_hex%>;"></li>
+                            <%shoe[0].colors.forEach((availColor) => {%>
+                                <li style="background-color: <%= availColor.color_hex%>;" data-color="<%= availColor.color_name%>" data-number="<%= shoe[0].product_id %>"></li>
                                 <% }); %>
                         </ul>
                     </div>

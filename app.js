@@ -177,7 +177,7 @@ app.route('/cart')
       })
     }else{
       let results = []
-      res.render('cart', { pageTitle: "Cart", results: results });
+      res.render('cart', { pageTitle: "Cart", results: results, isLoggedIn : req.isAuthenticated() });
     }
     
   });
@@ -267,11 +267,11 @@ app.route('/cart/add')
     }
     async function updateGuestCartInDB(req, res, cart, connection) {
       try {
-        const { cartID, updated } = cart;
-
+        const { cartID } = cart;
+        const newUpdate = getNewTime()
         // SQL query 1 (using promise-based API)
         const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
-        const insertCartValues = [updated, cartID];
+        const insertCartValues = [newUpdate, cartID];
         const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
 
 
@@ -284,6 +284,7 @@ app.route('/cart/add')
         try {
           const CartSumQuantity = await getCartSumQuantity(cartID, connection);
           cart.sumQuantity = CartSumQuantity;
+          cart.updated = newUpdate;
         } catch (error) {
           console.error('Error:', error);
         }
@@ -304,11 +305,11 @@ app.route('/cart/add')
     }
     async function updateAuthCartInDB(req, res, cart, connection) {
       try {
-        const { userID, cartID, updated } = cart;
-
+        const { userID, cartID } = cart;
+        const newUpdate = getNewTime()
         // SQL query 1 (using promise-based API)
         const insertCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
-        const insertCartValues = [updated, cartID];
+        const insertCartValues = [newUpdate, cartID];
         const [cartResults] = await connection.promise().query(insertCartQuery, insertCartValues);
 
         // SQL query 2 (using promise-based API)
@@ -320,6 +321,7 @@ app.route('/cart/add')
         try {
           const CartSumQuantity = await getCartSumQuantity(cartID, connection);
           cart.sumQuantity = CartSumQuantity;
+          cart.updated = newUpdate;
         } catch (error) {
           console.error('Error:', error);
         }
@@ -490,6 +492,10 @@ async function getCartSumQuantity(identifier, connection) {
   }
 }
 
+function getNewTime(){
+  return new Date().getTime()
+}
+
 
 //sign up routes
 app.route('/signup')
@@ -502,8 +508,13 @@ app.route('/signup')
     }
   })
   .post((req, res) => {
-    const { fname, lname, email, password, phone } = req.body;
-
+    var { fname, lname, email, password, phone } = req.body;
+    
+    fname = fname.trim();
+    lname = lname.trim();
+    email = email.trim();
+    password = password.trim();
+    phone = phone.trim();
     // Check if the email already exists
     connection.query(
       'SELECT * FROM customers WHERE email = ?',
@@ -520,7 +531,7 @@ app.route('/signup')
           // Email already exists in the database
           const errorMessage = "Email already exists. Please use a different email.";
           console.log(  'Error: ',errorMessage , fname, lname, email, phone );
-          res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone, statusCode: 409 });
+          res.render('signup', { pageTitle: 'signup', errorMessage, fname, lname, email, phone, statusCode: 409, isLoggedIn : req.isAuthenticated() });
         } else {
           // Email is unique, proceed with user registration
           // Hash the password
@@ -801,6 +812,7 @@ app.route('/login')
 
 // Logout Route
 app.post('/logout', (req, res, next) => {
+  console.log(req.user.customer_first_name, req.user.customer_last_name )
   req.logout((err) => {
     if (err) {
       return next(err);
