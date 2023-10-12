@@ -34,6 +34,10 @@
     max-width: 80px;
 }
 
+.nav-logo-small{
+    max-height: 80px;
+}
+
 
 /* ---------- Homepage ---------- */
 /* slider  --- */
@@ -339,10 +343,14 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 /* Start of Media Query for screens with a max width of 600px */
-@media (max-width: 600px) {
+@media (max-width: 767px) {
     /* Hide the paragraphs inside elements with class 'cart-inf' */
     .cart-info b {
       display: none;
+    }
+
+    .nav-link-wrap{
+        min-width: 100%;
     }
   }
   /* End of Media Query */
