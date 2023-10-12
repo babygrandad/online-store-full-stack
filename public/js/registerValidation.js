@@ -63,7 +63,7 @@ function checkNoValue(inputField, e) {
 };
 
 function checkPhoneValue(inputField, e) {
-    var value = inputField.val().trim();
+    var value = inputField.val().replace(/\s/g, "");
 
     if (!/^0\d{9}$/.test(value)) {
         inputField.addClass('is-invalid');
