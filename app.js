@@ -514,7 +514,7 @@ app.route('/signup')
     lname = lname.trim();
     email = email.trim();
     password = password.trim();
-    phone = phone.trim();
+    phone = phone.replace(/\s/g, "");
     // Check if the email already exists
     connection.query(
       'SELECT * FROM customers WHERE email = ?',
