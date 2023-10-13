@@ -3,20 +3,17 @@ require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const ejs = require("ejs");
-const axios = require("axios");
 const _ = require('lodash');
 const mysql = require('mysql2');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
-const $ = require('jquery');
 const { v4: uuidv4 } = require('uuid');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const cartLogic = require('./modules/cartLogic');
+
 
 const app = express();
 
