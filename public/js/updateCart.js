@@ -24,7 +24,6 @@ $(document).ready(function () {
             });
     });
 
-
     // Quantity input change event
     $('.update-quantity').change(function () {
         var productId = $(this).data('product-id');

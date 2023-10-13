@@ -170,10 +170,12 @@ app.route('/cart')
 
       const selectSQl = (`SELECT * FROM cart_info WHERE cart_id = "` + cartID + `" ;`);
 
+      const successMessage = req.query.successMessage;
+
       connection.query(selectSQl, (error, results, fields) => {
         if (error) throw error;
   
-        res.render('cart', { pageTitle: "Cart", results: results, isLoggedIn : req.isAuthenticated() }); // send the results back to the client
+        res.render('cart', { pageTitle: "Cart", results: results, isLoggedIn : req.isAuthenticated(), successMessage }); // send the results back to the client
       })
     }else{
       let results = []
@@ -395,7 +397,6 @@ app.route('/cart/remove')
   });
 
 
-
 app.route('/cart/update')
   .patch((req, res) => {
     const { newQuantity, productId, entryId } = req.body;
@@ -475,6 +476,59 @@ app.route('/cart/update')
   });
 
 
+app.route('/checkout')
+.post((req,res) =>{
+  if (req.isAuthenticated()) { //Is the user logged in? - Yes
+
+    // There is a cart already so.
+    let cart = req.cookies.cart;
+    clearAuthCartInDB(req, res, cart, connection)
+
+  }else{
+    res.redirect('/login?loginMessage=You need to login first before making a purchase.')
+  }
+
+  async function clearAuthCartInDB(req, res, cart, connection) {
+    try {
+      const { userID, cartID } = cart;
+      const newUpdate = getNewTime()
+      // SQL query 1 (using promise-based API)
+      const updateCartQuery = "UPDATE carts SET modified = ? WHERE cart_id = ?";
+      const updateCartValues = [newUpdate, cartID];
+      const [cartResults] = await connection.promise().query(updateCartQuery, updateCartValues);
+
+      // SQL query 2 (using promise-based API)
+      const { color, size, quantity, productID, entryID } = req.body;
+      const insertItemsQuery = "DELETE FROM cart_items WHERE cart_id = ? ";
+      const insertItemsValues = [cartID];
+      const [itemsResults] = await connection.promise().query(insertItemsQuery, insertItemsValues);
+
+      try {
+        const CartSumQuantity = await getCartSumQuantity(cartID, connection);
+        cart.sumQuantity = CartSumQuantity;
+        cart.updated = newUpdate;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      //testing cart results
+      console.log(cart);
+
+      // Handle response here
+      res
+        .cookie("cart", cart, { expires: new Date(new Date().getTime() + 3600000) })
+        .status(200)
+        const message = 'Your order will be delivered in 3 business days.';
+        const redirectURL = '/cart?successMessage=' + encodeURIComponent(message);
+        res.redirect(redirectURL);
+
+    } catch (error) {
+      // Handle any error
+      console.error(error);
+      res.status(500).send("Error saving cart. Please try again");
+    }
+  }
+})
 
 // -- Global Cart Function
 async function getCartSumQuantity(identifier, connection) {
@@ -512,7 +566,7 @@ app.route('/signup')
     
     fname = fname.trim();
     lname = lname.trim();
-    email = email.trim();
+    email = email.trim().toLowerCase();
     password = password.trim();
     phone = phone.replace(/\s/g, "");
     // Check if the email already exists

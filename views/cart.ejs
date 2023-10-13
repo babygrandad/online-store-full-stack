@@ -28,12 +28,18 @@
                 <tr>
                     <td></td>
                     <td>
-                        <a href="" class="btn btn-success">Check-Out <i class="fa-solid fa-cart-shopping"></i></a>
+                        <form action="/checkout" method="post"><button href="" class="btn btn-success">Check-Out <i class="fa-solid fa-cart-shopping"></i></button></form>
                     </td>
                 </tr>
             </table>
         </div>
-        <% }else{ %>
+        <!-- redirected-page.ejs -->
+        <%} else if (typeof successMessage !== 'undefined') { %>
+            <div class="no-purchase text-center">
+                <h1 class="py-2">🤩</h1>
+                <h3><%= successMessage %></h3>>
+            </div>
+        <% } else { %>
             <div class="no-purchase text-center">
                 <h1 class="py-2">🥺</h1>
                 <h3>You have no items in your cart. Start shopping to see your purchases.</h3>
